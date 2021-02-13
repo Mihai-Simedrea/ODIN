@@ -23,7 +23,7 @@ public:
     int index = 0;
 
 
-    void antreneaza(int iteratii, bool afisare_progres)
+    void antreneaza(int iteratii)
     {
         int n = structura.length();
         char s[n + 1];
