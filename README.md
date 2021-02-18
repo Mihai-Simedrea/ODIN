@@ -2,13 +2,14 @@
 ---
 ODIN reprezintă începutul primei biblioteci de inteligență artificială din România, a cărui scop este dezvoltarea unor programe de AI cât mai eficiente și utile în viața de zi cu zi.
 
-# CUM SE INSTALEAZA ODIN?
+# CUM SE INSTALEAZĂ ODIN?
 ---
 Pentru a inițializa ODIN va trebui să descărcați fișierele necesare funcționării acesteia, ci anume : fișierul Lib care conține : matrice.hpp și odin.hpp. 
 Apoi, în fișierul .cpp, includerea bibliotecii poate fi realizată folosind comanda #include "Lib/odin.hpp"
 
 # UN SCURT EXEMPLU AL UNUI PROGRAM ODIN
 ---
+Problema XOR
 ```c++
 
 /// INCLUDEREA BIBLIOTECILOR
@@ -69,3 +70,8 @@ int main()
 }
 
 ```
+# FUNCȚIILE SPECIFICE LUCRULUI CU MATRICE (matrice.hpp)
+---
+
+
+
