@@ -191,5 +191,205 @@ reprezentand valoarea ce va fi adaugata in matrice */
 </p>
 </details>
   
+<details>
+<summary> 3. Funcția de vectorizare </summary>
+<p>
+
+```c++
+Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si simplu schimba forma matricei intr-o matrice de tip coloana.
+{
+  Matrice vector_nou;  // initializarea unei matrice care va stoca informatiile anterioare
 
 
+  vector_nou.init(1, this->linii * this->coloane, "valoare", 0);  /* initializarea matricei cu valori nule, luand in considerare numarul de linii si coloane ale matricei din fisierul cpp*/
+
+  int index = 0;  // initializam un index care va fi pozitia in functie de linii si coloane
+
+  for(int i = 0; i < this->linii; i++)  // parcurgem numarul de linii ale matricei
+  {
+      for(int j = 0; j < this->coloane; j++)  // parcurgem numarul de coloane ale matricei
+      {
+          index = i * this->coloane + j;  // construim index-ul pe baza liniei si coloanei curente
+          vector_nou.valori[0][index] = this->valori[i][j];  // atribuim noii matrice elementele de pe pozitiile i si j
+      }
+  }
+
+  return vector_nou;  // returnam noua matrice de tip coloana
+}
+```
+
+</p>
+</details>
+
+<details>
+<summary> 4. Functia de randomizare </summary>
+<p>
+      
+```c++
+/* Functia de randomizare are 3 parametri. Primul este reprezentat de vectorul de input-uri,
+al doilea de vectorul de output-uri, iar al treilea de numarul de elemente care sunt supuse randomizarii */
+void randomizare(vector<Matrice> input, vector<Matrice> output, int numar_inputuri)
+{
+
+  /* Aici are loc initializarea seed-ului folosind biblioteca <random>, in defavoarea implementarii functiei rand(),
+  din cauza previzibilitatii acesteia */
+  random_device rd;
+  mt19937 mt(rd());
+  uniform_real_distribution<double> dist(0, numar_inputuri);
+
+
+  for(int i = 0; i < numar_inputuri; i++)  // parcurgem numarul de elemente care vor fi randomizate
+  {
+      int random = dist(mt);  // retinem in variabila random o valoare random in intervalul [0, numar_inputuri]
+      swap(input[i], input[random]);  // schimbam valorile de pe pozitia curenta, cu cele de pe pozitia generata random
+      swap(output[i], output[random]);  // schimbam valorile de pe pozitia curenta, cu cele de pe pozitia generata random
+
+  }
+}
+```
+
+</p>
+</details>
+
+<details>
+<summary> 5. Funcția de schimbare de formă </summary>
+<p>
+   
+```c++
+/* Functia "forma" schimba dimensiunea unei matrice.
+ Functia are doar doi parametri, prima dimensiune si a doua, acestea reprezinta
+ dimensiunile in care dorim sa convertim matricea. */
+Matrice forma(int dimensiune1, int dimensiune2)
+{
+  if(dimensiune1 * dimensiune2 == this->coloane * this->linii)  // daca produsul dimensiunilor introduse e egal cu cel al matricei se va realiza conversia.
+  {
+
+      Matrice vector_nou, vn;  // initializarea unui nou vector, in care sunt copiate informatiile matricei
+      vector_nou = this->vectorizare();  // transformarea matricei intr-o matrice de tip coloana
+
+      vn.init(dimensiune1, dimensiune2, "valoare", 0);  // initializarea vectorului cu dimensiunile corespunzatoare
+
+      int index = 0;  // initializam un index care va fi pozitia in functie de linii si coloane
+      for(int i = 0;i < dimensiune1; i++)  // parcurgerea liniilor in functie de dimensiunea introdusa
+      {
+          for(int j = 0; j < dimensiune2; j++)  // parcurgerea liniilor in functie de dimensiunea introdusa
+          {
+              vn.valori[i][j] = vector_nou.valori[0][index];  // atribuirea noului vector cu valorile din matricea coloana principala
+              index++;
+          }
+      }
+
+      return vn;  // returnam matricea
+
+  }
+  else  // daca dimensiunile nu sunt corespunzatoare operatia nu poate fi realizata
+  {
+      cout << " > Dimensiunea matricei nu poate fi schimbata deoarece valorile introduse nu corespund cu numarul de linii si coloane ale matricei introduse." << endl;
+      throw int(6);
+  }
+
+}
+```
+
+</p>
+</details>
+
+<details>
+<summary> 6. Funcția de transpunere a unei matrice </summary>
+<p>
+
+```c++
+/* Aceasta functie calculeaza transpusa matricei, exemplu : pentru o matrice de (3, 1), o va converti in (1, 3) */
+Matrice transpusa(Matrice matrice)  
+{
+  int coloane = matrice.coloane;  // retine numarul de coloane ale matricei in "coloane"
+  int linii = matrice.linii;  // retine numarul de linii ale matricei in "linii"
+
+  matrice = forma(coloane, linii);  // schimba forma matricei, liniile devin coloane, iar coloanele devin linii
+
+  return matrice;  // returneaza matricea
+
+}
+```
+
+</p>
+</details>
+
+<details>
+<summary> 7. Funcția sigmoidală </summary>
+<p>
+
+```c++
+/* Functia sigmoidala */
+double sigmoid(double x)
+{
+  return 1 / (1 + exp(-x));  // returneaza o valoare dupa aplicarea functiei sigmoidale
+}
+```
+
+</p>
+</details>  
+ 
+ 
+<details>
+<summary> 8. Funcția sigmoidală aplicată matricei </summary>
+<p>
+
+```c++
+/* Aceasta metoda aplica functia sigmoidala pentru o matrice */
+void sigmoid_matrice(Matrice &matrice)
+{
+  int coloane = matrice.coloane;  // retine numarul de coloane
+  int linii = matrice.linii;  // retine numarul de linii
+
+  matrice = matrice.vectorizare();  // vectorizeaza matricea
+
+  for(int i = 0; i < coloane * linii; i++)  // parcurge toate elementele matricei
+      matrice.valori[0][i] = sigmoid(matrice.valori[0][i]);  // aplica functia sigmoidala pentru fiecare valoare
+
+  matrice = forma(linii, coloane);  // schimba forma matricei la cea initiala
+}
+```
+
+</p>
+</details>  
+
+<details>
+<summary> 9. Funcția sigmoidală (derivata) </summary>
+<p>
+
+```c++
+/* Derivata functiei sigmoidale */
+double d_sigmoid(double x)
+{
+  return x * (1 - x);  /* o sa returneze valoarea dupa derivarea unei valori folosind functia sigmoidala (Valoarea trebuie sa aiba in componenta functia sigmoidala inainte de a fi aplicata derivata!!) */
+}
+
+```
+
+</p>
+</details>  
+
+
+<details>
+<summary> 10. Funcția sigmoidală (derivata) aplicată matricei </summary>
+<p>
+
+```c++
+// Derivata functiei sigmoidale aplicata matricei 
+void d_sigmoid_matrice(Matrice &matrice)
+{
+  int coloane = matrice.coloane;  // retine numarul de coloane
+  int linii = matrice.linii;  // retine numarul de linii
+
+  matrice = matrice.vectorizare();  // vectorizeaza matricea
+
+  for(int i = 0; i < coloane * linii; i++)  // parcurge toate elementele matricei
+      matrice.valori[0][i] = d_sigmoid(matrice.valori[0][i]);  // aplica derivata sigmoidalei pentru fiecare valoare din matrice
+
+  matrice = forma(linii, coloane);  // schimba forma matricei la cea initiala
+}
+```
+
+</p>
+</details>  
