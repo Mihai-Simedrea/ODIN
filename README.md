@@ -76,10 +76,14 @@ int main()
 În acest fișier se găsește o clasă cu următoarele metode : 
 
 <details>
-<summary> 1. Funcția de inițializare </summary>
-<p>
+   <summary> 1. Functia de initializare </summary>
+    <p>
+       
+  <p>Parametri :</p> 
+  <p>Returneaza : - </p>
 
-
+---
+       
 ```c++
 /* Aceasta este functia de initializare a unei matrice. Primeste ca parametri un numar de linii, respectiv de coloane,
 un string care reprezinta tipul matricei, putand lua doar doua valori : "valoare" sau "random". Primul string va genera
@@ -146,12 +150,14 @@ Matrice init(int numar_linii, int numar_coloane, string tip_matrice, double valo
 
 }
 ```
-
-</p>
+    
+  </p>
+   
 </details>
 
 <details>
 <summary> 2. Funcția de adăugare </summary>
+   
 <p>
    
 ```c++
