@@ -76,7 +76,7 @@ int main()
 În acest fișier se găsește o clasă cu următoarele metode : 
 
 <details>
-   <summary> 1. Functia de initializare </summary>
+   <summary> 1. Funcția de inițializare </summary>
     <p>
        
   > Parametri : <br>
@@ -471,7 +471,39 @@ void d_sigmoid_matrice(Matrice &matrice)
 </p>
 </details>  
 
-# FUNCȚIILE SPECIFICE LUCRULUI CU REȚEAUA NEURONALĂ (odin.hpp)
 ---
+În acest fișier se mai găsește și un namespace cu următoarele funcții :
 
-În acest fișier se găsește o clasă cu următoarele metode : 
+<details>
+<summary> 1. Funcția de afișare a matricei </summary>
+<p>
+
+> Parametri : <br>
+<b>out : </b> permite folosirea operatorului "<<", urmat de o matrice <br>
+<b>matrice : </b> matrice ce urmează să fie afișată (tip : Matrice) <br>
+
+> Returnează : "afișarea"
+
+```c++
+
+// Acesta este operatorul de afisare, adica putem folosi cout << matrice;
+ostream& operator<<(ostream &out, Matrice matrice)
+{
+
+  for(int i = 0;i < matrice.linii;i++) // parcurge numarul de linii
+  {
+      for(int j = 0;j< matrice.coloane;j++) // parcurge numarul de coloane
+      {
+          out << matrice.valori[i][j] << " "; // afiseaza fiecare element
+      }
+      out << endl;
+  }
+  return out;  // returneaza "afisarea"
+
+}
+
+```
+
+</p>
+</details>  
+
