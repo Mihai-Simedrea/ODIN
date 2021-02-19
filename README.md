@@ -974,7 +974,9 @@ void verificare()
 <p>
 
 > Parametri : <br>
+<p>
 <b>fisier</b> : numele fișierului în care vor fi stocate informațiile (tip : char[]) <br>
+</p>
 
 > Returnează : -
 
@@ -1052,7 +1054,9 @@ void salvare(char fisier[])
 <p>
 
 > Parametri : <br>
+<p>
 <b>fisier</b> : numele fișierului din care vor fi citite informațiile (tip : char[]) <br>
+</p>
 
 > Returnează : nu returnează nimic, doar schimbă variabilele globale care aparțin rețelei neuronale
 
