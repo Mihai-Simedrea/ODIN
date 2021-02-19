@@ -81,13 +81,13 @@ int main()
        
   > Parametri : <br>
   <p>
-      <b>numar_linii</b> : numarul de linii a matricei (tip : int)<br>
-      <b>numar_coloane</b> : numarul de coloane a matricei (tip : int)<br>
-      <b>tip_matrice</b> : tipul matricei, poate lua doar doua valori : "valoare" sau "random", pentru valoare va initializa matricea cu o anumita valoare, pentru random o va   initializa cu valori random (tip : string) <br>
-      <b>valoare</b> : acest parametru stabileste valoarea matricei, in cazul tipului de matrice "valoare" sau intervalul (-valoare, valoare) in cazul numerelor random (tip : double)
+      <b>numar_linii</b> : numărul de linii a matricei (tip : int)<br>
+      <b>numar_coloane</b> : numărul de coloane a matricei (tip : int)<br>
+      <b>tip_matrice</b> : tipul matricei, poate lua doar două valori : "valoare" sau "random", pentru valoare va inițializa matricea cu o anumită valoare, pentru random o va   inițializa cu valori random (tip : string) <br>
+      <b>valoare</b> : acest parametru stabilește valoarea matricei, în cazul tipului de matrice "valoare" sau intervalul (-valoare, valoare), în cazul numerelor random (tip : double)
 </p> 
 
-  > Returneaza : returneaza matricea (optional) 
+  > Returnează : returnează matricea (opțional) 
 
 ---
        
@@ -169,10 +169,10 @@ Matrice init(int numar_linii, int numar_coloane, string tip_matrice, double valo
    
    > Parametri : <br>
   <p>
-   <b>valoare</b> : primeste valoarea ce va fi adaugata in matrice (tip : double) <br>
+   <b>valoare</b> : primește valoarea ce va fi adăugată în matrice (tip : double) <br>
 </p> 
 
-  > Returneaza : - 
+  > Returnează : - 
    
 ```c++
 
@@ -216,7 +216,7 @@ reprezentand valoarea ce va fi adaugata in matrice */
 <p>
    
   > Parametri : - <br>
-  > Returneaza : returneaza matricea de tip coloana
+  > Returnează : returnează matricea de tip coloana
 
 ```c++
 Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si simplu schimba forma matricei intr-o matrice de tip coloana.
@@ -250,12 +250,12 @@ Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si s
    
   > Parametri : <br>
   <p>
-     <b>input</b> : vectorul de input-uri a caror pozitii urmeaza sa fie randomizate (tip : vector<Matrice>) <br>
-     <b>output</b> : vectorul de output-uri a caror pozitii urmeaza sa fie randomizate (tip : vector<Matrice>) <br>
-     <b>numar_inputuri</b> : numarul de elemente supuse randomizarii (tip : int) <br>
+     <b>input</b> : vectorul de input-uri a căror poziții urmează să fie randomizate (tip : vector<Matrice>) <br>
+     <b>output</b> : vectorul de output-uri a căror poziții urmează să fie randomizate (tip : vector<Matrice>) <br>
+     <b>numar_inputuri</b> : numărul de elemente supuse randomizării (tip : int) <br>
    </p>
 
-  > Returneaza : - 
+  > Returnează : - 
       
 ```c++
 /* Functia de randomizare are 3 parametri. Primul este reprezentat de vectorul de input-uri,
@@ -289,11 +289,11 @@ void randomizare(vector<Matrice> input, vector<Matrice> output, int numar_inputu
    
   > Parametri : <br>
   <p>
-   <b>dimensiune1</b> : numarul de linii ale viitoarei matrice (tip : int) <br> 
-   <b>dimensiune2</b> : numarul de coloane ale viitoarei matrice (tip : int) <br>
+   <b>dimensiune1</b> : numărul de linii ale viitoarei matrice (tip : int) <br> 
+   <b>dimensiune2</b> : numărul de coloane ale viitoarei matrice (tip : int) <br>
 </p> 
 
-  > Returneaza : returneaza matricea 
+  > Returnează : returnează matricea 
    
 ```c++
 /* Functia "forma" schimba dimensiunea unei matrice.
@@ -340,10 +340,10 @@ Matrice forma(int dimensiune1, int dimensiune2)
    
   > Parametri : <br>
   <p>
-   <b>matrice</b> : primeste matricea a carei transpusa urmeaza sa fie calculata (tip : Matrice) <br>
+   <b>matrice</b> : primește matricea a cărei transpusă urmează să fie calculată (tip : Matrice) <br>
 </p> 
 
-  > Returneaza : returneaza matricea 
+  > Returnează : returnează matricea 
 
 ```c++
 /* Aceasta functie calculeaza transpusa matricei, exemplu : pentru o matrice de (3, 1), o va converti in (1, 3) */
@@ -368,10 +368,10 @@ Matrice transpusa(Matrice matrice)
 
    > Parametri : <br>
   <p>
-   <b>x</b> : primeste o valoare careia ii va aplica functia sigmoidala (tip : double) <br>
+   <b>x</b> : primește o valoare căreia îi va aplica funcția sigmoidală (tip : double) <br>
 </p> 
 
-  > Returneaza : returneaza o valoare dupa aplicarea functiei sigmoidale 
+  > Returnează : returnează o valoare după aplicarea funcției sigmoidale 
 
 ```c++
 /* Functia sigmoidala */
@@ -392,10 +392,10 @@ double sigmoid(double x)
    
    > Parametri : <br>
   <p>
-   <b>matrice</b> : primeste o matrice, apoi fiecarui element din matrice i se va aplica functia sigmoidala (tip : Matrice) <br>
+   <b>matrice</b> : primește o matrice, apoi fiecărui element din matrice i se va aplica funcția sigmoidală (tip : Matrice) <br>
 </p> 
 
-  > Returneaza : returneaza matricea
+  > Returnează : returnează matricea
 
 ```c++
 /* Aceasta metoda aplica functia sigmoidala pentru o matrice */
@@ -423,10 +423,10 @@ void sigmoid_matrice(Matrice &matrice)
    
    > Parametri : <br>
   <p>
-   <b>x</b> : primeste o valoare careia ii va aplica functia sigmoidala (derivata) (tip : double) <br>
+   <b>x</b> : primește o valoare căreia îi va aplica funcția sigmoidală (derivata) (tip : double) <br>
 </p> 
 
-  > Returneaza : returneaza o valoare dupa aplicarea functiei sigmoidale 
+  > Returnează : returnează o valoare dupa aplicarea funcției sigmoidale 
 
 ```c++
 /* Derivata functiei sigmoidale */
@@ -447,10 +447,10 @@ double d_sigmoid(double x)
    
    > Parametri : <br>
   <p>
-   <b>matrice</b> : primeste o matrice, apoi fiecarui element din matrice i se va aplica functia sigmoidala (derivata) (tip : Matrice) <br>
+   <b>matrice</b> : primește o matrice, apoi fiecărui element din matrice i se va aplica funcția sigmoidală (derivata) (tip : Matrice) <br>
 </p> 
 
-  > Returneaza : returneaza matricea
+  > Returnează : returnează matricea
 
 ```c++
 // Derivata functiei sigmoidale aplicata matricei 
