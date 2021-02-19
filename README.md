@@ -86,7 +86,8 @@ int main()
       <b>tip_matrice</b> : tipul matricei, poate lua doar doua valori : "valoare" sau "random", pentru valoare va initializa matricea cu o anumita valoare, pentru random o va   initializa cu valori random (tip : string) <br>
       <b>valoare</b> : acest parametru stabileste valoarea matricei, in cazul tipului de matrice "valoare" sau intervalul (-valoare, valoare) in cazul numerelor random (tip : double)
 </p> 
-   > Returneaza : - 
+
+  > Returneaza : - 
 
 ---
        
