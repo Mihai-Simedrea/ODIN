@@ -969,6 +969,213 @@ void verificare()
 </p>
 </details>  
 
+<details>
+<summary> 4. Funcția de salvare </summary>
+<p>
+
+> Parametri : <br>
+<b>fisier</b> : numele fișierului în care vor fi stocate informațiile (tip : char[]) <br>
+
+> Returnează : -
+
+```c++
+
+// Aceasta este functia care salveaza datele referitoare la training
+void salvare(char fisier[])
+{
+
+  char fis[1000];  // un vector de char care stocheaza informatii referitoare la fisierul in care vor fi datele
+  strcpy(fis, fisier);  // copiaza numele fisierului in vectorul fis
+  char extensie[] = {".odin"};  // creeaza extensia bazei de date
+  strcat(fis, extensie); // adauga extensia fisierului
+
+  ofstream o(fis);  // declara fisierul de iesire
+
+  o << index;  // scrie in fisierul de iesire indexul
+  o << endl;
+
+  for(int i = 0; i <= index - 2; i++)
+  {
+      o << weights[i].linii << " " << weights[i].coloane << endl;  // scrie numarul de linii si coloane a tuturor sinapselor
+  }
+  for(int i = 0; i <= index - 2; i++)
+  {
+      o << biases[i].linii << " " << biases[i].coloane << endl;  // scrie numarul de linii si coloane a tuturor bias-urilor
+  }
+
+  o << endl;
+
+
+  for(int z = 0; z <= index - 2; z++)  // parcurge toate sinapsele
+  {
+      for(int i = 0;i < weights[z].linii;i++)  // parcurge liniile pentru sinapsa la pozitia z
+      {
+          for(int j = 0;j< weights[z].coloane;j++) // parcurge coloanele pentru sinapsa la pozitia z
+          {
+              o << weights[z].valori[i][j] << " ";  // scrie valorile sinapselor in fisier
+          }
+          o << endl;
+      }
+      o << endl;
+  }
+
+  o << endl;
+
+  for(int z = 0; z <= index - 2; z++)  // parcurge toate bias-urile
+  {
+      for(int i = 0;i < biases[z].linii;i++) // parcurge liniile pentru bias-ul la pozitia z
+      {
+          for(int j = 0;j< biases[z].coloane;j++)  // parcurge coloanele pentru bias-ul la pozitia z
+          {
+              o << biases[z].valori[i][j] << " ";  // scrie valorile bias-urilor
+          }
+          o << endl;
+      }
+      o << endl;
+  }
+
+  o << endl;
+  o << structura;  // scrie arhitectura retelei neuronale
+
+  o.close();  // inchide fisierul
+}
+
+
+
+```
+
+</p>
+</details>  
+
+<details>
+<summary> 5. Funcția de încărcare </summary>
+<p>
+
+> Parametri : <br>
+<b>fisier</b> : numele fișierului din care vor fi citite informațiile (tip : char[]) <br>
+
+> Returnează : nu returnează nimic, doar schimbă variabilele globale care aparțin rețelei neuronale
+
+```c++
+void incarcare(char fisier[])
+{
+
+  // afla numele fisierului (la fel ca la salvare)
+  char fis[1000];
+  strcpy(fis, fisier);
+  char extensie[] = {".odin"};
+  strcat(fis, extensie);
+
+  ifstream f(fis);
+
+  double x;
+
+  int lungime = 0;
+
+  vector <punct> pct;
+  int k = 0;
+  int suma = 0;
+  while(f >> x)  // citeste fiecare valoare din fisier si o atribuie valorii x
+  {
+      if(lungime == 0) // daca lungimea e 0, inseamna ca e la prima pozitie si retine index-ul, care reprezinta numarul de coloane pentru dimensiunile urmatoarelor matrice
+          index = x;
+      else  if(lungime > 0 && lungime <= (index - 1)* 2 * 2)  // daca lungimea e mai mare decat 0 si mai mica decat toate valorile dimensiunilor adunate executa urmatoarele :
+      {
+
+          // Creeaza un punct pe care il adauga vectorului de puncte (practic sunt dimensiunile matricelor (p.x = liniile, iar p.y = coloanele)
+          punct p;
+          if(lungime % 2 != 0)
+          {
+              p.x = x;
+          }
+          else
+          {
+              p.y = x;
+              pct.push_back(p);
+          }
+      }
+
+      lungime ++;  // updateaza dimensiunea
+  }
+
+  for(int i = 0; i < pct.size(); i++)
+      suma += pct[i].x * pct[i].y;
+
+
+  // Reseteaza fisierul, pointerul va fi iarasi la inceputul fisierului
+  f.clear();
+  f.seekg(0, ios::beg);
+
+
+  lungime = 0;
+  int pos = 0;
+  vector<Matrice> matrice;
+  bool ok = true;
+  char c;
+  string str;
+
+  while(ok)
+  {
+      if(lungime > pct.size() * 2)  // daca am trecut de identificarea dimensiunilor matricelor executam urmatoarele comenzi
+      {
+          if(pos < pct.size())  // daca pozitia e mai mica decat aceste dimeniuni
+          {
+              Matrice matrice;  // initializam o matrice
+
+              matrice.linii = pct[pos].x;  // matricea va avea numarul de linii din valoarea pct[pos].x, adica linia de pe pozitia "pos"
+              matrice.coloane = pct[pos].y;  // matricea va avea numarul de coloane din valoarea pct[pos].y, adica coloana de pe pozitia "pos"
+
+              for(int i = 0; i < pct[pos].x; i++)  // parcurge liniile matricei
+              {
+                  vector<double> temp;
+                  for(int j = 0; j < pct[pos].y; j++)  // parcurge coloanele matricei
+                  {
+                      f >> x;  // citeste valorile din fisier
+                      temp.push_back(x);  // le adauga in vectorul temporar
+                  }
+                  matrice.valori.push_back(temp); // adauga vectorul temporar in matrice
+              }
+
+              if(pos < pct.size() / 2)  // daca sunt citite sinapsele
+              {
+                  forma(matrice, pct[pos].x, pct[pos].y);  // schimba forma matricei in functie de dimensiunile din vectorul construit anterior
+                  weights.push_back(matrice);  // adauga matricea in vectorul de sinapse
+              }
+              else  // altfel sunt citite bias-urile
+              {
+                  forma(matrice, pct[pos].x, pct[pos].y); // schimba forma matricei in functie de dimensiunile din vectorul construit anterior
+                  biases.push_back(matrice);  // adauga matricea in vectorul de bias-uri
+              }
+
+              pos ++ ;
+          }
+          else
+          {
+              f >> c;  // citeste un caracter
+
+              str += c;  // adauga caracterul in acest string
+
+              if(c == ']')  // daca valoarea citita este ']' inseamna ca s-a ajuns la finalul fisierului si se opreste citirea
+                  ok = false;
+          }
+      }
+      else
+      {
+          f >> x;  // citeste x-ul
+          lungime ++ ; // updateaza lungimea
+      }
+  }
+
+  structura = str;  // retine str-ul constuit in while in variabila globala "structura"
+
+}
+
+```
+
+</p>
+</details>  
+
+
 
 
 
