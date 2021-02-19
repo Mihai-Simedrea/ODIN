@@ -470,3 +470,8 @@ void d_sigmoid_matrice(Matrice &matrice)
 
 </p>
 </details>  
+
+# FUNCȚIILE SPECIFICE LUCRULUI CU REȚEAUA NEURONALĂ (odin.hpp)
+---
+
+În acest fișier se găsește o clasă cu următoarele metode : 
