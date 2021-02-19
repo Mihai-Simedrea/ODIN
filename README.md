@@ -524,7 +524,7 @@ ostream& operator<<(ostream &out, Matrice matrice)
 
 ```c++
 
-// Aceasta este operatorul de adunare, face suma intre doua matrice (matrice1 + matrice2)
+// Acesta este operatorul de adunare, face suma intre doua matrice (matrice1 + matrice2)
 Matrice operator+(Matrice matrice1, Matrice matrice2)  
 {
   Matrice rezultat;  // declararea unei matrice care va stoca noile informatii din adunarea celor doua matrice
@@ -564,10 +564,10 @@ Matrice operator+(Matrice matrice1, Matrice matrice2)
 
 ```c++
 
-// Aceasta este operatorul de scadere, face diferenta intre doua matrice (matrice1 - matrice2)
+// Acesta este operatorul de scadere, face diferenta intre doua matrice (matrice1 - matrice2)
 Matrice operator-(Matrice matrice1, Matrice matrice2)
 {
-  Matrice rezultat; // declararea unei matrice care va stoca noile informatii din adunarea celor doua matrice
+  Matrice rezultat; // declararea unei matrice care va stoca noile informatii din scaderea celor doua matrice
   if(!(matrice1.coloane == matrice2.coloane && matrice1.linii == matrice2.linii)) // daca liniile/coloanele primei matrice nu sunt egale cu liniile/coloanele celei de a doua matrice nu se realizeaza operatiunea
   {
       cout << " > Nu se poate realiza diferenta intre cele doua matrice deoarece nu au aceeasi dimensiune." << endl;
@@ -588,6 +588,96 @@ Matrice operator-(Matrice matrice1, Matrice matrice2)
 
 </p>
 </details>  
+
+
+<details>
+<summary> 4. Funcția de înmulțire cu scalar </summary>
+<p>
+
+> Parametri : <br>
+<p>
+<b>valoare_scalar : </b> valoarea cu care vom înmulți fiecare element din matrice (tip : double) <br>
+<b>matrice : </b> matrice căruia i se va aplica scalarul (tip : Matrice) <br>
+</p>
+
+> Returnează : matricea înmulțită cu valoarea scalarului
+
+```c++
+
+// Acesta este operatorul de inmultire cu scalar, inmulteste fiecare element din matrice cu un numar de tip double
+Matrice operator*(double valoare_scalar, Matrice matrice)
+{
+  Matrice rezultat;  // declararea unei matrice care va stoca noile informatii din inmultirea matricei cu scalarul
+  rezultat = rezultat.init(matrice.linii, matrice.coloane, "valoare", 0);  // initializarea matricei cu numarul de coloane, respectiv de linii din prima matrice
+  for(int i = 0; i < matrice.linii; i++)  // parcurgerea liniilor
+      for(int j = 0;j < matrice.coloane; j++)  // parcurgerea coloanelor
+          rezultat.valori[i][j] = valoare_scalar * matrice.valori[i][j];  // retine produsul dintre scalar si elementul matricei transmise in noua matrice
+  return rezultat;  // returneaza matricea
+
+}
+
+```
+
+</p>
+</details>  
+
+<details>
+<summary> 5. Funcția de înmulțire între două matrice </summary>
+<p>
+
+> Parametri : <br>
+<p>
+<b>matrice1 : </b> prima matrice (tip : Matrice) <br>
+<b>matrice2 : </b> a doua matrice (tip : Matrice) <br>
+</p>
+
+> Returnează : produsul dintre cele două matrice
+
+```c++
+
+// Aceasta este operatorul de inmultirea a doua matrice (matrice1 * matrice2) - dot product
+Matrice operator*(Matrice matrice1, Matrice matrice2)
+{
+  Matrice rezultat; // declararea unei matrice care va stoca noile informatii din inmultirea celor doua matrice
+
+  bool ok = false;
+
+  if(matrice1.coloane == matrice2.linii)  // daca numarul de coloane a primei matrice e egal cu cel de linii a celei de a doua matrice se poate realiza inmultirea
+      ok = true;
+
+
+  if (ok)
+  {
+      rezultat = rezultat.init(matrice1.linii, matrice2.coloane, "valoare", 0); // initializarea matricei cu numarul de coloane, respectiv de linii din prima matrice
+      for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
+      {
+          for(int j = 0;j < matrice2.coloane; j++)  // parcurgerea coloanelor
+          {
+              int k = 0;
+              for(int z = 0; z < matrice1.coloane; z++)  // parcurgerea elementelor pentru a putea realiza dot product-ul
+              {
+                  rezultat.valori[i][j] += matrice1.valori[i][k] * matrice2.valori[k][j];  // realizeaza dot product-ul
+                  k ++ ;
+              }
+          }
+      }
+      return rezultat;  // returneaza produsul dintre cele doua matrice
+  }
+  else
+  {
+      cout << " > Nu se poate realiza produsul intre cele doua matrice deoarece " << matrice1.coloane << " != " << matrice2.linii << ". \n";
+      throw int(4);
+  }
+
+
+}
+
+
+```
+
+</p>
+</details>  
+
 
 
 
