@@ -80,7 +80,6 @@ int main()
     <p>
        
   <p>Parametri :</p> 
-  <p>Returneaza : - </p>
 
 ---
        
