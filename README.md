@@ -680,4 +680,55 @@ Matrice operator*(Matrice matrice1, Matrice matrice2)
 
 
 
+<details>
+<summary> 6. Funcția a doua de înmulțire între două matrice </summary>
+<p>
+
+> Parametri : <br>
+<p>
+<b>matrice1 : </b> prima matrice (tip : Matrice) <br>
+<b>matrice2 : </b> a doua matrice (tip : Matrice) <br>
+</p>
+
+> Returnează : produsul dintre cele două matrice (înmulțirea are loc element cu element)
+
+```c++
+
+// Acesta este operatorul de inmutire a doua matrice (matrice1 % matrice2), imultirea are loc element cu element, este TOTAL diferita fata de (matrice1 * matrice2)
+Matrice operator%(Matrice matrice1, Matrice matrice2)
+{
+  Matrice rezultat;  // declararea unei matrice care va stoca noile informatii din inmultirea celor doua matrice
+  bool ok = false;
+
+  if(matrice1.coloane == matrice2.coloane && matrice1.linii == matrice2.linii)  // daca numarul de coloane a primei matrice e egal cu cel de linii a celei de a doua matrice se poate realiza inmultirea
+      ok = true;
+
+
+  if (ok)
+  {
+      rezultat = rezultat.init(matrice1.linii, matrice2.coloane, "valoare", 0);  // initializarea matricei cu numarul de coloane, respectiv de linii din prima matrice
+      for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
+      {
+          for(int j = 0;j < matrice2.coloane; j++) // parcurgerea coloanelor
+          {
+              rezultat.valori[i][j] = matrice1.valori[i][j] * matrice2.valori[i][j];  // inmulteste element cu element valorile dintre cele doua matrice si le stocheaza in noua matrice
+          }
+      }
+      return rezultat;  // returneaza produsul dintre cele doua matrice
+  }
+  else
+  {
+      cout << " > Nu se poate realiza produsul intre cele doua matrice deoarece nu au aceeasi dimensiune." << endl;
+      throw int(5);
+  }
+}
+
+
+```
+
+</p>
+</details>  
+
+
+
 
