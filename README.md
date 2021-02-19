@@ -167,6 +167,13 @@ Matrice init(int numar_linii, int numar_coloane, string tip_matrice, double valo
    
 <p>
    
+     > Parametri : <br>
+  <p>
+   <b>valoare</b> : primeste valoarea ce va fi adaugata in matrice (tip : double) <br>
+</p> 
+
+  > Returneaza : - 
+   
 ```c++
 
 void adauga(double valoare)  /* unicul parametru al functiei este de tip double,
