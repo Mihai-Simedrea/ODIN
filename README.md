@@ -729,6 +729,11 @@ Matrice operator%(Matrice matrice1, Matrice matrice2)
 </p>
 </details>  
 
+# FUNCȚIILE SPECIFICE LUCRULUI CU REȚEAUA NEURONALĂ (odin.hpp)
+---
+
+În acest fișier se găsește o clasă cu următoarele metode : 
+
 
 
 
