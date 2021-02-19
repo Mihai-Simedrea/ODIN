@@ -80,8 +80,10 @@ int main()
     <p>
        
   <p>Parametri : 
-   <b>numar_linii</b> : numarul de linii a matricei
-   <b>numar_coloane</b> : numarul de coloane a matricei
+   <b>numar_linii</b> : numarul de linii a matricei <br>
+   <b>numar_coloane</b> : numarul de coloane a matricei <br>
+   <b>tip_matrice</b> : tipul matricei, poate lua doar doua valori : "valoare" sau "random", pentru valoare va initializa matricea cu o anumita valoare, pentru random o va initializa cu valori random <br>
+   <b>valoare</b> : acest parametru stabileste valoarea matricei, in cazul tipului de matrice "valoare" sau intervalul (-valoare, valoare) in cazul numerelor random
 </p> 
 
 ---
