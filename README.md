@@ -479,8 +479,10 @@ void d_sigmoid_matrice(Matrice &matrice)
 <p>
 
 > Parametri : <br>
+<p>
 <b>out : </b> permite folosirea operatorului "<<", urmat de o matrice <br>
 <b>matrice : </b> matrice ce urmează să fie afișată (tip : Matrice) <br>
+</p>
 
 > Returnează : "afișarea"
 
@@ -506,4 +508,86 @@ ostream& operator<<(ostream &out, Matrice matrice)
 
 </p>
 </details>  
+
+
+<details>
+<summary> 2. Funcția de sumă </summary>
+<p>
+
+> Parametri : <br>
+<p>
+<b>matrice1 : </b> prima matrice (tip : Matrice) <br>
+<b>matrice2 : </b> a doua matrice (tip : Matrice) <br>
+</p>
+
+> Returnează : suma dintre cele două matrice
+
+```c++
+
+// Aceasta este operatorul de adunare, face suma intre doua matrice (matrice1 + matrice2)
+Matrice operator+(Matrice matrice1, Matrice matrice2)  
+{
+  Matrice rezultat;  // declararea unei matrice care va stoca noile informatii din adunarea celor doua matrice
+
+  if(!(matrice1.coloane == matrice2.coloane && matrice1.linii == matrice2.linii))  // daca liniile/coloanele primei matrice nu sunt egale cu liniile/coloanele celei de a doua matrice nu se realizeaza operatiunea
+  {
+      cout << " > Nu se poate realiza suma intre cele doua matrice deoarece nu au aceeasi dimensiune." << endl;
+      throw int(2);
+  }
+  else  // altfel, are loc adunarea
+  {
+      rezultat = rezultat.init( matrice1.linii, matrice1.coloane, "valoare", 0);  // initializarea matricei cu numarul de coloane, respectiv de linii din prima matrice
+      for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
+          for(int j = 0;j < matrice1.coloane; j++) // parcurgerea coloanelor
+              rezultat.valori[i][j] = matrice1.valori[i][j] + matrice2.valori[i][j];  // retine suma elementelor de pe pozitia i si j in noua matrice
+
+      return rezultat;  // returneaza rezultatul
+  }
+}
+
+```
+
+</p>
+</details>  
+
+<details>
+<summary> 3. Funcția de diferență </summary>
+<p>
+
+> Parametri : <br>
+<p>
+<b>matrice1 : </b> prima matrice (tip : Matrice) <br>
+<b>matrice2 : </b> a doua matrice (tip : Matrice) <br>
+</p>
+
+> Returnează : diferența dintre cele două matrice
+
+```c++
+
+// Aceasta este operatorul de scadere, face diferenta intre doua matrice (matrice1 - matrice2)
+Matrice operator-(Matrice matrice1, Matrice matrice2)
+{
+  Matrice rezultat; // declararea unei matrice care va stoca noile informatii din adunarea celor doua matrice
+  if(!(matrice1.coloane == matrice2.coloane && matrice1.linii == matrice2.linii)) // daca liniile/coloanele primei matrice nu sunt egale cu liniile/coloanele celei de a doua matrice nu se realizeaza operatiunea
+  {
+      cout << " > Nu se poate realiza diferenta intre cele doua matrice deoarece nu au aceeasi dimensiune." << endl;
+      throw int(3);
+  }
+
+  else // altfel, are loc scaderea
+  {
+      rezultat = rezultat.init(matrice1.linii, matrice1.coloane, "valoare", 0);  // initializarea matricei cu numarul de coloane, respectiv de linii din prima matrice
+      for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
+          for(int j = 0;j < matrice1.coloane; j++)  // parcurgerea coloanelor
+              rezultat.valori[i][j] = matrice1.valori[i][j] - matrice2.valori[i][j];  // retine suma elementelor de pe pozitia i si j in noua matrice
+      return rezultat;  // returneaza rezultatul
+  }
+}
+
+```
+
+</p>
+</details>  
+
+
 
