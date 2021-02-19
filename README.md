@@ -735,7 +735,28 @@ Matrice operator%(Matrice matrice1, Matrice matrice2)
 În acest fișier se găsește o clasă cu următoarele metode : 
 
 <details>
-<summary> 1. Funcția de antrenare a rețelei </summary>
+<summary> 1. Funcții din odin.cpp </summary>
+<p>
+
+> Ce reprezintă fiecare funcție din odin.hpp?
+
+```c++
+
+ReteaNeuronala model;  // declararea rețelei neuronale
+model.input = input;  // atribuirea input-urilor ce urmează să fie antrenate
+model.output = output;  // atribuirea output-urilor corespunzătoare input-urilor
+model.rata_de_invatare = 0.2;  // rata de învățare poate lua orice valoare în (0, 1) , inițial este setată la 0.8
+model.structura = "[2, 2, 1]";  // structura rețelei neuronale, în cazul nostru avem 2 neuroni pentru input-uri, 2 pentru primul hidden layer și unul pentru output
+model.antreneaza(20000);  // numărul de ”antrenamente” ale structurii
+model.verificare();  // verificarea input-urilor după training
+
+```
+
+</p>
+</details>  
+
+<details>
+<summary> 2. Funcția de antrenare a rețelei </summary>
 <p>
    
   > Parametri : <br>
@@ -885,7 +906,7 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
 </details>
 
 <details>
-<summary> 2. Funcția de verificare </summary>
+<summary> 3. Funcția de verificare </summary>
 <p>
 
 > Parametri : - <br>
