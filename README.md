@@ -87,7 +87,7 @@ int main()
       <b>valoare</b> : acest parametru stabileste valoarea matricei, in cazul tipului de matrice "valoare" sau intervalul (-valoare, valoare) in cazul numerelor random (tip : double)
 </p> 
 
-  > Returneaza : - 
+  > Returneaza : returneaza matricea (optional) 
 
 ---
        
@@ -167,7 +167,7 @@ Matrice init(int numar_linii, int numar_coloane, string tip_matrice, double valo
    
 <p>
    
-     > Parametri : <br>
+   > Parametri : <br>
   <p>
    <b>valoare</b> : primeste valoarea ce va fi adaugata in matrice (tip : double) <br>
 </p> 
@@ -214,6 +214,9 @@ reprezentand valoarea ce va fi adaugata in matrice */
 <details>
 <summary> 3. Funcția de vectorizare </summary>
 <p>
+   
+  > Parametri : - <br>
+  > Returneaza : returneaza matricea de tip coloana
 
 ```c++
 Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si simplu schimba forma matricei intr-o matrice de tip coloana.
@@ -244,6 +247,13 @@ Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si s
 <details>
 <summary> 4. Functia de randomizare </summary>
 <p>
+   
+  > Parametri : <br>
+  <b>input</b> : vectorul de input-uri a caror pozitii urmeaza sa fie randomizate (tip : vector<Matrice>)
+  <b>output</b> : vectorul de output-uri a caror pozitii urmeaza sa fie randomizate (tip : vector<Matrice>)
+  <b>numar_inputuri</b> : numarul de elemente supuse randomizarii (tip : int)
+
+  > Returneaza : - 
       
 ```c++
 /* Functia de randomizare are 3 parametri. Primul este reprezentat de vectorul de input-uri,
