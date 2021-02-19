@@ -249,9 +249,9 @@ Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si s
 <p>
    
   > Parametri : <br>
-  <b>input</b> : vectorul de input-uri a caror pozitii urmeaza sa fie randomizate (tip : vector<Matrice>)
-  <b>output</b> : vectorul de output-uri a caror pozitii urmeaza sa fie randomizate (tip : vector<Matrice>)
-  <b>numar_inputuri</b> : numarul de elemente supuse randomizarii (tip : int)
+     <b>input</b> : vectorul de input-uri a caror pozitii urmeaza sa fie randomizate (tip : vector<Matrice>) <br>
+     <b>output</b> : vectorul de output-uri a caror pozitii urmeaza sa fie randomizate (tip : vector<Matrice>) <br>
+     <b>numar_inputuri</b> : numarul de elemente supuse randomizarii (tip : int) <br>
 
   > Returneaza : - 
       
@@ -284,6 +284,14 @@ void randomizare(vector<Matrice> input, vector<Matrice> output, int numar_inputu
 <details>
 <summary> 5. Funcția de schimbare de formă </summary>
 <p>
+   
+  > Parametri : <br>
+  <p>
+   <b>dimensiune1</b> : numarul de linii ale viitoarei matrice (tip : int) <br> 
+   <b>dimensiune2</b> : numarul de coloane ale viitoarei matrice (tip : int) <br>
+</p> 
+
+  > Returneaza : returneaza matricea 
    
 ```c++
 /* Functia "forma" schimba dimensiunea unei matrice.
