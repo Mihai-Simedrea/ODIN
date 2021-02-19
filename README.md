@@ -79,7 +79,7 @@ int main()
    <summary> 1. Functia de initializare </summary>
     <p>
        
-  <p>Parametri : 
+  <p>Parametri : <br>
    <b>numar_linii</b> : numarul de linii a matricei <br>
    <b>numar_coloane</b> : numarul de coloane a matricei <br>
    <b>tip_matrice</b> : tipul matricei, poate lua doar doua valori : "valoare" sau "random", pentru valoare va initializa matricea cu o anumita valoare, pentru random o va initializa cu valori random <br>
