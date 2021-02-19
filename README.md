@@ -79,7 +79,7 @@ int main()
    <summary> 1. Functia de initializare </summary>
     <p>
        
-  <p>Parametri :</p> 
+  <p>Parametri : numarul de linii a matricei</p> 
 
 ---
        
