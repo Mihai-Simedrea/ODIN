@@ -249,9 +249,11 @@ Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si s
 <p>
    
   > Parametri : <br>
+  <p>
      <b>input</b> : vectorul de input-uri a caror pozitii urmeaza sa fie randomizate (tip : vector<Matrice>) <br>
      <b>output</b> : vectorul de output-uri a caror pozitii urmeaza sa fie randomizate (tip : vector<Matrice>) <br>
      <b>numar_inputuri</b> : numarul de elemente supuse randomizarii (tip : int) <br>
+   </p>
 
   > Returneaza : - 
       
@@ -335,6 +337,13 @@ Matrice forma(int dimensiune1, int dimensiune2)
 <details>
 <summary> 6. Funcția de transpunere a unei matrice </summary>
 <p>
+   
+  > Parametri : <br>
+  <p>
+   <b>matrice</b> : primeste matricea a carei transpusa urmeaza sa fie calculata (tip : Matrice) <br>
+</p> 
+
+  > Returneaza : returneaza matricea 
 
 ```c++
 /* Aceasta functie calculeaza transpusa matricei, exemplu : pentru o matrice de (3, 1), o va converti in (1, 3) */
@@ -357,6 +366,13 @@ Matrice transpusa(Matrice matrice)
 <summary> 7. Funcția sigmoidală </summary>
 <p>
 
+   > Parametri : <br>
+  <p>
+   <b>x</b> : primeste o valoare careia ii va aplica functia sigmoidala (tip : double) <br>
+</p> 
+
+  > Returneaza : returneaza o valoare dupa aplicarea functiei sigmoidale 
+
 ```c++
 /* Functia sigmoidala */
 double sigmoid(double x)
@@ -372,6 +388,14 @@ double sigmoid(double x)
 <details>
 <summary> 8. Funcția sigmoidală aplicată matricei </summary>
 <p>
+   
+   
+   > Parametri : <br>
+  <p>
+   <b>matrice</b> : primeste o matrice, apoi fiecarui element din matrice i se va aplica functia sigmoidala (tip : Matrice) <br>
+</p> 
+
+  > Returneaza : returneaza matricea
 
 ```c++
 /* Aceasta metoda aplica functia sigmoidala pentru o matrice */
@@ -395,6 +419,14 @@ void sigmoid_matrice(Matrice &matrice)
 <details>
 <summary> 9. Funcția sigmoidală (derivata) </summary>
 <p>
+   
+   
+   > Parametri : <br>
+  <p>
+   <b>x</b> : primeste o valoare careia ii va aplica functia sigmoidala (derivata) (tip : double) <br>
+</p> 
+
+  > Returneaza : returneaza o valoare dupa aplicarea functiei sigmoidale 
 
 ```c++
 /* Derivata functiei sigmoidale */
@@ -412,6 +444,13 @@ double d_sigmoid(double x)
 <details>
 <summary> 10. Funcția sigmoidală (derivata) aplicată matricei </summary>
 <p>
+   
+   > Parametri : <br>
+  <p>
+   <b>matrice</b> : primeste o matrice, apoi fiecarui element din matrice i se va aplica functia sigmoidala (derivata) (tip : Matrice) <br>
+</p> 
+
+  > Returneaza : returneaza matricea
 
 ```c++
 // Derivata functiei sigmoidale aplicata matricei 
