@@ -31,8 +31,7 @@ int main()
    /// INPUTURI
 
    /* Aici are loc inițializarea matricelor cu valorile respective programului XOR.
-   Mai întâi inițializăm matricea auxiliară cu valorile necesare, urmând ca mai apoi să adăugăm
-   matricea respectivă în vectorul de input-uri folosind comanda ”push_back()” din biblioteca ”<vector>”. */
+   Adăugăm matricea respectivă în vectorul de input-uri folosind comanda ”push_back()” din biblioteca ”<vector>”. */
 
    input.push_back(Matrice(2, 1, "valoare", 1));
    input.push_back(Matrice(2, 1, "valoare", 0));
