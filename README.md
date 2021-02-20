@@ -179,10 +179,9 @@ Matrice (int numar_linii, int numar_coloane, string tip_matrice, double valoare)
 void adauga(double valoare)  /* unicul parametru al functiei este de tip double,
 reprezentand valoarea ce va fi adaugata in matrice */
 {
-  Matrice vector_nou;  /* initializarea unei matrice care va stoca informatiile anterioare, 
+  Matrice vector_nou(1, this->linii * this->coloane + 1, "valoare", 0);  /* initializarea unei matrice care va stoca informatiile anterioare,
   dar, in plus, va avea si noua valoare adaugata */
 
-  vector_nou = vector_nou.init(1, this->linii * this->coloane + 1, "valoare", 0); 
   /* initializam matricea cu liniile matricei din fisierul .cpp, de asemenea, numarul de coloane se va
   incrementa cu 1, reprezentand locul pentru valoarea ce va fi adaugata */
 
@@ -202,11 +201,10 @@ reprezentand valoarea ce va fi adaugata in matrice */
 
   this->linii = vector_nou.linii;  // setam numarul de linii in functie de numarul de linii ale matricei construite in functie
   this->coloane = vector_nou.coloane;  // setam numarul de coloane in functie de numarul de coloane ale matricei construite in functie
-  this->valori = vector_nou.valori;  // setam valorile in functie de valorile matricei construite in functie
+  this->valori = vector_nou.valori;  // preluam valorile din vector si le setam matricei
 
 
 }
-
 ```
 </p>
 </details>
@@ -221,10 +219,7 @@ reprezentand valoarea ce va fi adaugata in matrice */
 ```c++
 Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si simplu schimba forma matricei intr-o matrice de tip coloana.
 {
-  Matrice vector_nou;  // initializarea unei matrice care va stoca informatiile anterioare
-
-
-  vector_nou.init(1, this->linii * this->coloane, "valoare", 0);  /* initializarea matricei cu valori nule, luand in considerare numarul de linii si coloane ale matricei din fisierul cpp*/
+  Matrice vector_nou(1, this->linii * this->coloane, "valoare", 0);  // initializarea unei matrice care va stoca informatiile anterioare
 
   int index = 0;  // initializam un index care va fi pozitia in functie de linii si coloane
 
@@ -304,10 +299,8 @@ Matrice forma(int dimensiune1, int dimensiune2)
   if(dimensiune1 * dimensiune2 == this->coloane * this->linii)  // daca produsul dimensiunilor introduse e egal cu cel al matricei se va realiza conversia.
   {
 
-      Matrice vector_nou, vn;  // initializarea unui nou vector, in care sunt copiate informatiile matricei
+      Matrice vector_nou(0,0,"valoare",0), vn(dimensiune1, dimensiune2, "valoare", 0);  // initializarea unui nou vector, in care sunt copiate informatiile matricei
       vector_nou = this->vectorizare();  // transformarea matricei intr-o matrice de tip coloana
-
-      vn.init(dimensiune1, dimensiune2, "valoare", 0);  // initializarea vectorului cu dimensiunile corespunzatoare
 
       int index = 0;  // initializam un index care va fi pozitia in functie de linii si coloane
       for(int i = 0;i < dimensiune1; i++)  // parcurgerea liniilor in functie de dimensiunea introdusa
@@ -409,7 +402,7 @@ void sigmoid_matrice(Matrice &matrice)
   for(int i = 0; i < coloane * linii; i++)  // parcurge toate elementele matricei
       matrice.valori[0][i] = sigmoid(matrice.valori[0][i]);  // aplica functia sigmoidala pentru fiecare valoare
 
-  matrice = forma(linii, coloane);  // schimba forma matricei la cea initiala
+  matrice = matrice.forma(linii, coloane);  // schimba forma matricei la cea initiala
 }
 ```
 
@@ -453,7 +446,7 @@ double d_sigmoid(double x)
   > Returnează : returnează matricea
 
 ```c++
-// Derivata functiei sigmoidale aplicata matricei 
+// Derivata functiei sigmoidale aplicata matricei
 void d_sigmoid_matrice(Matrice &matrice)
 {
   int coloane = matrice.coloane;  // retine numarul de coloane
@@ -464,7 +457,7 @@ void d_sigmoid_matrice(Matrice &matrice)
   for(int i = 0; i < coloane * linii; i++)  // parcurge toate elementele matricei
       matrice.valori[0][i] = d_sigmoid(matrice.valori[0][i]);  // aplica derivata sigmoidalei pentru fiecare valoare din matrice
 
-  matrice = forma(linii, coloane);  // schimba forma matricei la cea initiala
+  matrice = matrice.forma(linii, coloane);  // schimba forma matricei la cea initiala
 }
 ```
 
@@ -525,9 +518,9 @@ ostream& operator<<(ostream &out, Matrice matrice)
 ```c++
 
 // Acesta este operatorul de adunare, face suma intre doua matrice (matrice1 + matrice2)
-Matrice operator+(Matrice matrice1, Matrice matrice2)  
+Matrice operator+(Matrice matrice1, Matrice matrice2)
 {
-  Matrice rezultat;  // declararea unei matrice care va stoca noile informatii din adunarea celor doua matrice
+  Matrice rezultat(matrice1.linii, matrice1.coloane, "valoare", 0);  // declararea unei matrice care va stoca noile informatii din adunarea celor doua matrice
 
   if(!(matrice1.coloane == matrice2.coloane && matrice1.linii == matrice2.linii))  // daca liniile/coloanele primei matrice nu sunt egale cu liniile/coloanele celei de a doua matrice nu se realizeaza operatiunea
   {
@@ -536,7 +529,6 @@ Matrice operator+(Matrice matrice1, Matrice matrice2)
   }
   else  // altfel, are loc adunarea
   {
-      rezultat = rezultat.init( matrice1.linii, matrice1.coloane, "valoare", 0);  // initializarea matricei cu numarul de coloane, respectiv de linii din prima matrice
       for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
           for(int j = 0;j < matrice1.coloane; j++) // parcurgerea coloanelor
               rezultat.valori[i][j] = matrice1.valori[i][j] + matrice2.valori[i][j];  // retine suma elementelor de pe pozitia i si j in noua matrice
@@ -544,6 +536,7 @@ Matrice operator+(Matrice matrice1, Matrice matrice2)
       return rezultat;  // returneaza rezultatul
   }
 }
+
 
 ```
 
@@ -564,10 +557,10 @@ Matrice operator+(Matrice matrice1, Matrice matrice2)
 
 ```c++
 
-// Acesta este operatorul de scadere, face diferenta intre doua matrice (matrice1 - matrice2)
+// Acesta este operatorul de scadere, face diferenta intre doua matrice (matrice1 + matrice2)
 Matrice operator-(Matrice matrice1, Matrice matrice2)
 {
-  Matrice rezultat; // declararea unei matrice care va stoca noile informatii din scaderea celor doua matrice
+  Matrice rezultat(matrice1.linii, matrice1.coloane, "valoare", 0); // declararea unei matrice care va stoca noile informatii din scaderea celor doua matrice
   if(!(matrice1.coloane == matrice2.coloane && matrice1.linii == matrice2.linii)) // daca liniile/coloanele primei matrice nu sunt egale cu liniile/coloanele celei de a doua matrice nu se realizeaza operatiunea
   {
       cout << " > Nu se poate realiza diferenta intre cele doua matrice deoarece nu au aceeasi dimensiune." << endl;
@@ -576,13 +569,13 @@ Matrice operator-(Matrice matrice1, Matrice matrice2)
 
   else // altfel, are loc scaderea
   {
-      rezultat = rezultat.init(matrice1.linii, matrice1.coloane, "valoare", 0);  // initializarea matricei cu numarul de coloane, respectiv de linii din prima matrice
       for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
           for(int j = 0;j < matrice1.coloane; j++)  // parcurgerea coloanelor
               rezultat.valori[i][j] = matrice1.valori[i][j] - matrice2.valori[i][j];  // retine suma elementelor de pe pozitia i si j in noua matrice
       return rezultat;  // returneaza rezultatul
   }
 }
+
 
 ```
 
@@ -607,8 +600,7 @@ Matrice operator-(Matrice matrice1, Matrice matrice2)
 // Acesta este operatorul de inmultire cu scalar, inmulteste fiecare element din matrice cu un numar de tip double
 Matrice operator*(double valoare_scalar, Matrice matrice)
 {
-  Matrice rezultat;  // declararea unei matrice care va stoca noile informatii din inmultirea matricei cu scalarul
-  rezultat = rezultat.init(matrice.linii, matrice.coloane, "valoare", 0);  // initializarea matricei cu numarul de coloane, respectiv de linii din prima matrice
+  Matrice rezultat(matrice.linii, matrice.coloane, "valoare", 0);  // declararea unei matrice care va stoca noile informatii din inmultirea matricei cu scalarul
   for(int i = 0; i < matrice.linii; i++)  // parcurgerea liniilor
       for(int j = 0;j < matrice.coloane; j++)  // parcurgerea coloanelor
           rezultat.valori[i][j] = valoare_scalar * matrice.valori[i][j];  // retine produsul dintre scalar si elementul matricei transmise in noua matrice
@@ -634,11 +626,10 @@ Matrice operator*(double valoare_scalar, Matrice matrice)
 > Returnează : produsul dintre cele două matrice
 
 ```c++
-
 // Aceasta este operatorul de inmultirea a doua matrice (matrice1 * matrice2) - dot product
 Matrice operator*(Matrice matrice1, Matrice matrice2)
 {
-  Matrice rezultat; // declararea unei matrice care va stoca noile informatii din inmultirea celor doua matrice
+  Matrice rezultat(matrice1.linii, matrice2.coloane, "valoare", 0); // declararea unei matrice care va stoca noile informatii din inmultirea celor doua matrice
 
   bool ok = false;
 
@@ -648,7 +639,6 @@ Matrice operator*(Matrice matrice1, Matrice matrice2)
 
   if (ok)
   {
-      rezultat = rezultat.init(matrice1.linii, matrice2.coloane, "valoare", 0); // initializarea matricei cu numarul de coloane, respectiv de linii din prima matrice
       for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
       {
           for(int j = 0;j < matrice2.coloane; j++)  // parcurgerea coloanelor
@@ -671,7 +661,6 @@ Matrice operator*(Matrice matrice1, Matrice matrice2)
 
 
 }
-
 
 ```
 
@@ -697,7 +686,7 @@ Matrice operator*(Matrice matrice1, Matrice matrice2)
 // Acesta este operatorul de inmutire a doua matrice (matrice1 % matrice2), imultirea are loc element cu element, este TOTAL diferita fata de (matrice1 * matrice2)
 Matrice operator%(Matrice matrice1, Matrice matrice2)
 {
-  Matrice rezultat;  // declararea unei matrice care va stoca noile informatii din inmultirea celor doua matrice
+  Matrice rezultat(matrice1.linii, matrice2.coloane, "valoare", 0);  // declararea unei matrice care va stoca noile informatii din inmultirea celor doua matrice
   bool ok = false;
 
   if(matrice1.coloane == matrice2.coloane && matrice1.linii == matrice2.linii)  // daca numarul de coloane a primei matrice e egal cu cel de linii a celei de a doua matrice se poate realiza inmultirea
@@ -706,7 +695,6 @@ Matrice operator%(Matrice matrice1, Matrice matrice2)
 
   if (ok)
   {
-      rezultat = rezultat.init(matrice1.linii, matrice2.coloane, "valoare", 0);  // initializarea matricei cu numarul de coloane, respectiv de linii din prima matrice
       for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
       {
           for(int j = 0;j < matrice2.coloane; j++) // parcurgerea coloanelor
@@ -722,7 +710,6 @@ Matrice operator%(Matrice matrice1, Matrice matrice2)
       throw int(5);
   }
 }
-
 
 ```
 
@@ -747,7 +734,7 @@ model.input = input;  // atribuirea input-urilor ce urmează să fie antrenate
 model.output = output;  // atribuirea output-urilor corespunzătoare input-urilor
 model.rata_de_invatare = 0.2;  // rata de învățare poate lua orice valoare în (0, 1) , inițial este setată la 0.8
 model.structura = "[2, 2, 1]";  // structura rețelei neuronale, în cazul nostru avem 2 neuroni pentru input-uri, 2 pentru primul hidden layer și unul pentru output
-model.antreneaza(20000);  // numărul de ”antrenamente” ale structurii
+model.antreneaza(5000);  // numărul de ”antrenamente” ale structurii
 model.verificare();  // verificarea input-urilor după training
 
 ```
@@ -785,17 +772,16 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
   }
 
 
-  Matrice aux;  // o matrice auxiliara pentru a putea folosi functiile din matrice.hpp
-
   for(int i = 0; i <= index - 2; i++)
   {
-      weights.push_back(aux.init(structura_int[i+1], structura_int[i], "random", 2));  // initalizeaza vectorul de sinapse cu valori random in (-2, 2). Iar dimensiunea este stabilita in functie de numarul de pe poztia i + 1 din strctura si numarul de pe pozitia i
+      weights.push_back(Matrice(structura_int[i+1], structura_int[i], "random", 2));  // initalizeaza vectorul de sinapse cu valori random in (-2, 2). Iar dimensiunea este stabilita in functie de numarul de pe poztia i + 1 din strctura si numarul de pe pozitia i
       // aceasta initializare este facuta in felul acesta pentru a putea realiza operatiile specifice matricelor, precum : adunare, scadere, produs, etc...
   }
 
   for(int i = 0; i <= index - 1; i++)
-      biases.push_back(aux.init(structura_int[i + 1], 1, "random", 2));  // initializeaza bias-urile in functie de pozitia de pe i + 1 cu valori in (-2, 2)
-
+  {
+      biases.push_back(Matrice(structura_int[i + 1], 1, "random", 2));  // initializeaza bias-urile in functie de pozitia de pe i + 1 cu valori in (-2, 2)
+  }
 
 
   vector<Matrice> hidden_layers;  // declararea unui vector de hidden layers
@@ -807,9 +793,9 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
       for(int i = 0 ; i < input.size(); i++)  // parcurgem lungimea input-urilor
       {
           vector<Matrice> hidden_layers;  // initalizare hidden layers
-          Matrice rezultat;  // initializarea unei matrice de rezultat care va retine valori diverse in vederea training-ului
-          rezultat = weights[0] * input[i];  // calcularea primului hidden layer
-          hidden_layers.push_back(rezultat);  // adaugarea primului hidden layer in vector
+
+          hidden_layers.push_back(weights[0] * input[i]);  // adaugarea primului hidden layer in vector
+
 
           hidden_layers[0] = hidden_layers[0] + biases[0];  // adaugarea bias-ului in primul hidden layer
 
@@ -818,8 +804,7 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
 
           for(int j = 1; j <= index - 2; j++)  // parcurgerea urmatoarelor layere.
           {
-              rezultat = weights[j] * hidden_layers[j - 1];  // calculeaza produsul in functie de sinapsele curente si hidden layer-ul anterior
-              hidden_layers.push_back(rezultat);  // adauga in vector rezultatul
+              hidden_layers.push_back(weights[j] * hidden_layers[j - 1]);  // adauga in vector rezultatul (calculeaza produsul in functie de sinapsele curente si hidden layer-ul anterior)
               hidden_layers[j] = biases[j] + hidden_layers[j]; // adauga bias-ul hidden layer-ului
               hidden_layers[j].sigmoid_matrice(hidden_layers[j]);  // aplica functia sigmoidala hidden layer-ului de pe pozitia j
 
@@ -827,7 +812,9 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
 
           vector<Matrice> erori_hidden_layers;  // declararea vectorului de erori
           for(int j = 0; j <= index - 2; j++)  // parcurgem vectorul pentru a-l putea initializa cu valori nule
-              erori_hidden_layers.push_back(aux.init(1, 1, "valoare", 0));
+          {
+              erori_hidden_layers.push_back(Matrice(1, 1, "valoare", 0));
+          }
 
           erori_hidden_layers[index - 2] = output[i] - hidden_layers[index - 2];  // in felul acesta putem calcula eroarea output-ului.
           // Daca facem diferenta intre output-ul pe care il cunoastem si output-ul care a fost prezis de catre program putem calcula eroarea acestuia
@@ -853,13 +840,13 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
 
           for(int j = 0; j <= index - 2; j++)  // parcurgem vectorii declarati anterior si le atribuim valori nule
           {
-              hidden_layers_derivate.push_back(aux.init(1, 1, "valoare", 0));
-              gradienturi.push_back(aux.init(1, 1, "valoare", 0));
-              delta_weights.push_back(aux.init(1, 1, "valoare", 0));
+              hidden_layers_derivate.push_back(Matrice(1, 1, "valoare", 0));
+              gradienturi.push_back(Matrice(1, 1, "valoare", 0));
+              delta_weights.push_back(Matrice(1, 1, "valoare", 0));
           }
 
 
-          for(int j = index - 2 ; j >= 0; j -- )  // parcurgem vectorii 
+          for(int j = index - 2 ; j >= 0; j -- )  // parcurgem vectorii
           {
               hidden_layers_derivate[j] = hidden_layers[j];  // retinem hidden layerul de pe pozitia j in noul vector
               hidden_layers_derivate[j].d_sigmoid_matrice(hidden_layers_derivate[j]);  // aplicam derivata functiei sigmoidale hidden layer-ului
@@ -881,7 +868,7 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
 
           input[i] = input[i].transpusa(input[i]);  // transpusa input-ului
 
-          delta_weights[0] = gradienturi[0] * input[i];  // calculam delta weights-urile necesare pentru input-uri 
+          delta_weights[0] = gradienturi[0] * input[i];  // calculam delta weights-urile necesare pentru input-uri
           input[i] = input[i].transpusa(input[i]);  // revenim la forma initiala a input-urilor
 
 
@@ -935,11 +922,10 @@ void verificare()
       index++;
   }
 
-  Matrice aux;
 
   for(int i = 0; i <= index - 2; i++)
   {
-      hidden_layers.push_back(aux.init(1, 1, "valoare", 0));
+      hidden_layers.push_back(Matrice(1, 1, "valoare", 0));
   }
 
   for(int i = 0 ; i < input.size(); i++)
@@ -1043,7 +1029,6 @@ void salvare(char fisier[])
 }
 
 
-
 ```
 
 </p>
@@ -1124,7 +1109,7 @@ void incarcare(char fisier[])
       {
           if(pos < pct.size())  // daca pozitia e mai mica decat aceste dimeniuni
           {
-              Matrice matrice;  // initializam o matrice
+              Matrice matrice(0, 0, "valoare", 0);  // initializam o matrice
 
               matrice.linii = pct[pos].x;  // matricea va avea numarul de linii din valoarea pct[pos].x, adica linia de pe pozitia "pos"
               matrice.coloane = pct[pos].y;  // matricea va avea numarul de coloane din valoarea pct[pos].y, adica coloana de pe pozitia "pos"
@@ -1142,12 +1127,12 @@ void incarcare(char fisier[])
 
               if(pos < pct.size() / 2)  // daca sunt citite sinapsele
               {
-                  forma(matrice, pct[pos].x, pct[pos].y);  // schimba forma matricei in functie de dimensiunile din vectorul construit anterior
+                  matrice = matrice.forma(pct[pos].x, pct[pos].y);  // schimba forma matricei in functie de dimensiunile din vectorul construit anterior
                   weights.push_back(matrice);  // adauga matricea in vectorul de sinapse
               }
               else  // altfel sunt citite bias-urile
               {
-                  forma(matrice, pct[pos].x, pct[pos].y); // schimba forma matricei in functie de dimensiunile din vectorul construit anterior
+                  matrice = matrice.forma(pct[pos].x, pct[pos].y); // schimba forma matricei in functie de dimensiunile din vectorul construit anterior
                   biases.push_back(matrice);  // adauga matricea in vectorul de bias-uri
               }
 
