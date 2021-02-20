@@ -77,7 +77,7 @@ int main()
 În acest fișier se găsește o clasă cu următoarele metode : 
 
 <details>
-   <summary> 1. Funcția de inițializare </summary>
+   <summary> 1. Constructorul matricei </summary>
     <p>
        
   > Parametri : <br>
@@ -88,75 +88,74 @@ int main()
       <b>valoare</b> : acest parametru stabilește valoarea matricei, în cazul tipului de matrice "valoare" sau intervalul (-valoare, valoare), în cazul numerelor random (tip : double)
 </p> 
 
-  > Returnează : returnează matricea (opțional) 
+  > Returnează : construiește matricea
 
 ---
        
 ```c++
-/* Aceasta este functia de initializare a unei matrice. Primeste ca parametri un numar de linii, respectiv de coloane,
+/* Acesta este constructorul matricei. Primeste ca parametri un numar de linii, respectiv de coloane,
 un string care reprezinta tipul matricei, putand lua doar doua valori : "valoare" sau "random". Primul string va genera
 o matrice care contine doar valoarea din variabila valoare, iar "random" va genera numere random in intervalul
 (-valoare, valoare)*/
-Matrice init(int numar_linii, int numar_coloane, string tip_matrice, double valoare)
-{
+// Constructorul clasei
+    Matrice (int numar_linii, int numar_coloane, string tip_matrice, double valoare)
+    {
 
 
-  /* Aici are loc initializarea seed-ului folosind biblioteca <random>, in defavoarea implementarii functiei rand(),
-  din cauza previzibilitatii acesteia */
+        /* Aici are loc initializarea seed-ului folosind biblioteca <random>, in defavoarea implementarii functiei rand(),
+        din cauza previzibilitatii acesteia */
 
-  random_device rd;
-  mt19937 mt(rd());
-  uniform_real_distribution<double> dist(-valoare, valoare);
+        random_device rd;
+        mt19937 mt(rd());
+        uniform_real_distribution<double> dist(-valoare, valoare);
 
-  if(numar_linii < 0 || numar_coloane < 0)  /* daca numarul de linii sau coloane este mai mic decat 0, 
-  initializarea nu are sens si nu va avea loc. */
-  {
-      cout << " > Numarul de linii si coloane trebuie sa fie pozitiv." << endl;
-      throw int(1);
-  }
+        if(numar_linii < 0 || numar_coloane < 0)  // daca numarul de linii sau coloane este mai mic decat 0, initializarea nu are sens si nu va avea loc.
+        {
+            cout << " > Numarul de linii si coloane trebuie sa fie pozitiv." << endl;
+            throw int(1);
+        }
 
-  else
-  {
-      Matrice matrice;  // initializarea unei matrice care va reprezenta matricea initializata in fisierul .cpp
-      bool val = false;
-      bool random = false;
-
-      /* Aceste structuri decizionale verifica tipul matricei, transmis ca parametru prin functia principalt */
-      if(tip_matrice == "valoare")
-          val = true;
-      if(tip_matrice == "random")
-          random = true;
+        else
+        {
+            //Matrice matrice; // initializarea unei matrice care va reprezenta matricea initializata in fisierul .cpp
+            bool val = false;
+            bool random = false;
 
 
-      matrice.linii = numar_linii;  // initializarea numarului de linii cu valoarea din parametrul specific
-      matrice.coloane = numar_coloane;  // initializarea numarului de coloane cu valoarea din parametrul specific
+            /* Aceste structuri decizionale verifica tipul matricei, transmis ca parametru prin functia principalt */
+            if(tip_matrice == "valoare")
+                val = true;
+            if(tip_matrice == "random")
+                random = true;
 
-      for (int h = 0; h < numar_linii; h++)  // parcurgem numarul de linii al matricei
-      {
-          vector<double> temp;  // initializam un vector temporar care va retine valorile de pe linia "h"
-          for (int w = 0; w < numar_coloane; w++)  // parcurgem numarul de coloane
-          {
-              if(val)  // daca tipul matricei este "valoare" adaugam in vectorul temporar valoarea respectiva
-                  temp.push_back(valoare);
-              else if(random)  // altfel adaugam un numar random in intervalul cunoscut
-              {
 
-                  temp.push_back((dist(mt)));
-              }
+            for (int h = 0; h < numar_linii; h++)  // parcurgem numarul de linii al matricei
+            {
+                vector<double> temp;  // initializam un vector temporar care va retine valorile de pe linia "h"
+                for (int w = 0; w < numar_coloane; w++)  // parcurgem numarul de coloane
+                {
+                    if(val)  // daca tipul matricei este "valoare" adaugam in vectorul temporar valoarea respectiva
+                        temp.push_back(valoare);
+                    else if(random)  // altfel adaugam un numar random in intervalul cunoscut
+                    {
 
-          }
+                        temp.push_back((dist(mt)));
+                    }
 
-          matrice.valori.push_back(temp);  // adaugam linia curenta in matrice
+                }
 
-      }
+                this->valori.push_back(temp);  // adaugam linia curenta in matrice
 
-      this->linii = matrice.linii;  // preluam numarul de linii al matricei si il atribuim clasei
-      this->coloane = matrice.coloane;  // preluam numarul de coloane al matricei si il atribuim clasei
-      this->valori = matrice.valori;  // preluam valorile din matrice si le atribuim clasei
-      return matrice;  // returnam matricea
-  }
+            }
 
-}
+            this->linii = numar_linii;  // preluam numarul de linii al matricei si il atribuim clasei
+            this->coloane = numar_coloane;  // preluam numarul de coloane al matricei si il atribuim clasei
+
+        }
+
+
+    }
+
 ```
     
   </p>
