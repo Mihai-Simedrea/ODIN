@@ -330,25 +330,24 @@ Matrice forma(int dimensiune1, int dimensiune2)
 <summary> 6. Funcția de transpunere a unei matrice </summary>
 <p>
    
-  > Parametri : <br>
-  <p>
-   <b>matrice</b> : primește matricea a cărei transpusă urmează să fie calculată (tip : Matrice) <br>
-</p> 
+  > Parametri : - <br> 
 
-  > Returnează : returnează matricea 
+  > Returnează : returnează matricea transpusă
 
 ```c++
 /* Aceasta functie calculeaza transpusa matricei, exemplu : pentru o matrice de (3, 1), o va converti in (1, 3) */
-Matrice transpusa(Matrice matrice)  
+Matrice transpusa()
 {
-  int coloane = matrice.coloane;  // retine numarul de coloane ale matricei in "coloane"
-  int linii = matrice.linii;  // retine numarul de linii ale matricei in "linii"
+  Matrice matrice(0, 0, "valoare", 1);
+  int coloane = this->coloane;  // retine numarul de coloane ale matricei in "coloane"
+  int linii = this->linii;  // retine numarul de linii ale matricei in "linii"
 
-  matrice = forma(coloane, linii);  // schimba forma matricei, liniile devin coloane, iar coloanele devin linii
+  matrice = this->forma(coloane, linii);  // schimba forma matricei, liniile devin coloane, iar coloanele devin linii
 
   return matrice;  // returneaza matricea
 
 }
+
 ```
 
 </p>
@@ -382,26 +381,25 @@ double sigmoid(double x)
 <p>
    
    
-   > Parametri : <br>
-  <p>
-   <b>matrice</b> : primește o matrice, apoi fiecărui element din matrice i se va aplica funcția sigmoidală (tip : Matrice) <br>
-</p> 
+   > Parametri : - <br> 
 
   > Returnează : returnează matricea
 
 ```c++
 /* Aceasta metoda aplica functia sigmoidala pentru o matrice */
-void sigmoid_matrice(Matrice &matrice)
+Matrice sigmoid_matrice()
 {
-  int coloane = matrice.coloane;  // retine numarul de coloane
-  int linii = matrice.linii;  // retine numarul de linii
+  Matrice matrice(0, 0, "valoare", 0);
+  int coloane = this->coloane;  // retine numarul de coloane
+  int linii = this->linii;  // retine numarul de linii
 
-  matrice = matrice.vectorizare();  // vectorizeaza matricea
+  matrice = this->vectorizare();  // vectorizeaza matricea
 
   for(int i = 0; i < coloane * linii; i++)  // parcurge toate elementele matricei
       matrice.valori[0][i] = sigmoid(matrice.valori[0][i]);  // aplica functia sigmoidala pentru fiecare valoare
 
   matrice = matrice.forma(linii, coloane);  // schimba forma matricei la cea initiala
+  return matrice;  // returneaza matricea
 }
 ```
 
@@ -437,26 +435,25 @@ double d_sigmoid(double x)
 <summary> 10. Funcția sigmoidală (derivata) aplicată matricei </summary>
 <p>
    
-   > Parametri : <br>
-  <p>
-   <b>matrice</b> : primește o matrice, apoi fiecărui element din matrice i se va aplica funcția sigmoidală (derivata) (tip : Matrice) <br>
-</p> 
+   > Parametri : - <br>
 
   > Returnează : returnează matricea
 
 ```c++
 // Derivata functiei sigmoidale aplicata matricei
-void d_sigmoid_matrice(Matrice &matrice)
+Matrice d_sigmoid_matrice()
 {
-  int coloane = matrice.coloane;  // retine numarul de coloane
-  int linii = matrice.linii;  // retine numarul de linii
+  Matrice matrice(0, 0, "valoare", 0);
+  int coloane = this->coloane;  // retine numarul de coloane
+  int linii = this->linii;  // retine numarul de linii
 
-  matrice = matrice.vectorizare();  // vectorizeaza matricea
+  matrice = this->vectorizare();  // vectorizeaza matricea
 
   for(int i = 0; i < coloane * linii; i++)  // parcurge toate elementele matricei
       matrice.valori[0][i] = d_sigmoid(matrice.valori[0][i]);  // aplica derivata sigmoidalei pentru fiecare valoare din matrice
 
   matrice = matrice.forma(linii, coloane);  // schimba forma matricei la cea initiala
+  return matrice; // returneaza matricea
 }
 ```
 
@@ -798,14 +795,14 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
 
           hidden_layers[0] = hidden_layers[0] + biases[0];  // adaugarea bias-ului in primul hidden layer
 
-          hidden_layers[0].sigmoid_matrice(hidden_layers[0]);  // aplicarea functiei sigmoidale pentru primul hidden layer
+          hidden_layers[0] = hidden_layers[0].sigmoid_matrice();  // aplicarea functiei sigmoidale pentru primul hidden layer
 
 
           for(int j = 1; j <= index - 2; j++)  // parcurgerea urmatoarelor layere.
           {
               hidden_layers.push_back(weights[j] * hidden_layers[j - 1]);  // adauga in vector rezultatul (calculeaza produsul in functie de sinapsele curente si hidden layer-ul anterior)
               hidden_layers[j] = biases[j] + hidden_layers[j]; // adauga bias-ul hidden layer-ului
-              hidden_layers[j].sigmoid_matrice(hidden_layers[j]);  // aplica functia sigmoidala hidden layer-ului de pe pozitia j
+              hidden_layers[j] = hidden_layers[j].sigmoid_matrice();  // aplica functia sigmoidala hidden layer-ului de pe pozitia j
 
           }
 
@@ -822,11 +819,11 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
           for(int j = index - 2 - 1; j >= 0; j -- )  // parcurgere hidden layers
           {
 
-              weights[j+1] = weights[j+1].transpusa(weights[j + 1]);  // facem transpusa matricei pentru a putea realiza operatiile viitoare
+              weights[j+1] = weights[j+1].transpusa();  // facem transpusa matricei pentru a putea realiza operatiile viitoare
 
               erori_hidden_layers[j] = weights[j + 1] * erori_hidden_layers[j + 1];  // distribuim erorile pe pozitia j in functie de cele de pe pozitia j+1
 
-              weights[j+1] = weights[j+1].transpusa(weights[j + 1]); // aducem matricea la forma initiala, aplicand inca o data traspusa
+              weights[j+1] = weights[j+1].transpusa(); // aducem matricea la forma initiala, aplicand inca o data traspusa
 
 
 
@@ -848,7 +845,7 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
           for(int j = index - 2 ; j >= 0; j -- )  // parcurgem vectorii
           {
               hidden_layers_derivate[j] = hidden_layers[j];  // retinem hidden layerul de pe pozitia j in noul vector
-              hidden_layers_derivate[j].d_sigmoid_matrice(hidden_layers_derivate[j]);  // aplicam derivata functiei sigmoidale hidden layer-ului
+              hidden_layers_derivate[j] = hidden_layers_derivate[j].d_sigmoid_matrice();  // aplicam derivata functiei sigmoidale hidden layer-ului
 
               gradienturi[j] = erori_hidden_layers[j] % hidden_layers_derivate[j];  // calculam gradientul in functie de eroare si derivata (inmultim matricele element cu element)
               gradienturi[j] = rata_de_invatare * gradienturi[j];  // aplicam rata de invatare
@@ -860,15 +857,15 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
 
           for(int j = index - 2; j >= 1; j--)
           {
-              hidden_layers[j - 1] = hidden_layers[j-1].transpusa(hidden_layers[j - 1]); // transpusa matricei
+              hidden_layers[j - 1] = hidden_layers[j-1].transpusa(); // transpusa matricei
               delta_weights[j] = gradienturi[j] * hidden_layers[j - 1];  // calculam delta weights-urile pentru a putea adauga diferenta necesara in vederea imbunatatirii retelei neuronale, acesta valori sunt relativ mici.
-              hidden_layers[j - 1] = hidden_layers[j - 1].transpusa(hidden_layers[j - 1]);  // revenirea la forma initiala a matricei
+              hidden_layers[j - 1] = hidden_layers[j - 1].transpusa();  // revenirea la forma initiala a matricei
           }
 
-          input[i] = input[i].transpusa(input[i]);  // transpusa input-ului
+          input[i] = input[i].transpusa();  // transpusa input-ului
 
           delta_weights[0] = gradienturi[0] * input[i];  // calculam delta weights-urile necesare pentru input-uri
-          input[i] = input[i].transpusa(input[i]);  // revenim la forma initiala a input-urilor
+          input[i] = input[i].transpusa();  // revenim la forma initiala a input-urilor
 
 
           // folosind acest for actualizam sinapsele in functie de delta_weights (pe care le-am calculat la pasii anteriori)
@@ -886,6 +883,7 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
   cout << endl << endl;
 
 }
+
 ```
 
 </p>
@@ -931,14 +929,14 @@ void verificare()
   {
       hidden_layers[0] = weights[0] * input[i];
       hidden_layers[0] = hidden_layers[0] + biases[0];
-      hidden_layers[0].sigmoid_matrice(hidden_layers[0]);
+      hidden_layers[0] = hidden_layers[0].sigmoid_matrice();
 
 
       for(int j = 1; j <= index - 2; j++)
       {
           hidden_layers[j] = weights[j] * hidden_layers[j - 1];
           hidden_layers[j] = hidden_layers[j] + biases[j];
-          hidden_layers[j].sigmoid_matrice(hidden_layers[j]);
+          hidden_layers[j] = hidden_layers[j].sigmoid_matrice();
 
       }
 
