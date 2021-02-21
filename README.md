@@ -1,7 +1,7 @@
 # INTROUDCERE
 ---
 <b>ODIN</b> reprezintă începutul primei biblioteci de inteligență artificială din România, a cărui scop este dezvoltarea unor programe de AI cât mai eficiente și utile în viața de zi cu zi. <br>
-<b>ODIN</b> este momentan funcțional doar pentru programe de tip supervised learining. În viitor vor fi adăugate mai multe metode.
+<b>ODIN</b> este momentan funcțional doar pentru programe de tip supervised learning. În viitor vor fi adăugate mai multe metode.
 
 # CUM SE INSTALEAZĂ ODIN?
 ---
