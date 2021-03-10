@@ -36,15 +36,15 @@ int main()
    input.push_back(Matrice(2, 1, "valoare", 1));
    input.push_back(Matrice(2, 1, "valoare", 0));
    input.push_back(Matrice(1, 1, "valoare", 0));
-   input[2].adauga(1);  /* deoarece input[2] are o singură valoare, va trebui să adăugăm și un 1,
+   input[2].adauga({1});  /* deoarece input[2] are o singură valoare, va trebui să adăugăm și un 1,
    pentru a avea matricea (0, 1)*/
 
-   input[2] = input[2].forma(2, 1); /* după această adăugare forma matricei se va schimba într-o matrice de tip coloană.
+   input[2] = input[2].sforma(2, 1); /* după această adăugare forma matricei se va schimba într-o matrice de tip coloană.
    Acest lucru poate fi remediat folosind comanda ”forma()”, care va schimba dimensiunea matricei. */
 
    input.push_back(Matrice(1, 1, "valoare", 1));
-   input[3].adauga(0);
-   input[3] = input[2].forma(2, 1);
+   input[3].adauga({0});
+   input[3] = input[2].sforma(2, 1);
 
 
    /// OUTPUTURI
@@ -92,11 +92,6 @@ int main()
 ---
        
 ```c++
-/* Acesta este constructorul matricei. Primeste ca parametri un numar de linii, respectiv de coloane,
-un string care reprezinta tipul matricei, putand lua doar doua valori : "valoare" sau "random". Primul string va genera
-o matrice care contine doar valoarea din variabila valoare, iar "random" va genera numere random in intervalul
-(-valoare, valoare)*/
-// Constructorul clasei
 Matrice (int numar_linii, int numar_coloane, string tip_matrice, double valoare)
 {
 
@@ -152,6 +147,11 @@ Matrice (int numar_linii, int numar_coloane, string tip_matrice, double valoare)
 
   }
 
+  this->forma[0] = numar_linii;
+  this->forma[1] = numar_coloane;
+
+
+}
 
 }
 
@@ -162,7 +162,7 @@ Matrice (int numar_linii, int numar_coloane, string tip_matrice, double valoare)
 </details>
 
 <details>
-<summary> 2. Funcția de adăugare </summary>
+<summary> 2. Funcția de adăugare element în matrice </summary>
    
 <p>
    
@@ -175,7 +175,7 @@ Matrice (int numar_linii, int numar_coloane, string tip_matrice, double valoare)
    
 ```c++
 
-void adauga(double valoare)  /* unicul parametru al functiei este de tip double,
+void v_adauga(double valoare)  /* unicul parametru al functiei este de tip double,
 reprezentand valoarea ce va fi adaugata in matrice */
 {
   Matrice vector_nou(1, this->linii * this->coloane + 1, "valoare", 0);  /* initializarea unei matrice care va stoca informatiile anterioare,
@@ -202,14 +202,42 @@ reprezentand valoarea ce va fi adaugata in matrice */
   this->coloane = vector_nou.coloane;  // setam numarul de coloane in functie de numarul de coloane ale matricei construite in functie
   this->valori = vector_nou.valori;  // preluam valorile din vector si le setam matricei
 
+  this->forma[0] = this->linii;
+  this->forma[1] = this->coloane;
+
 
 }
 ```
 </p>
 </details>
-  
+
 <details>
-<summary> 3. Funcția de vectorizare </summary>
+<summary> 3. Funcția de adăugare a unei liste de valori în matrice </summary>
+   
+<p>
+   
+   > Parametri : <br>
+  <p>
+   <b>valoare</b> : primește ca parametru un vector de valori <br>
+</p> 
+
+  > Returnează : - 
+   
+```c++
+
+// Functia ce adauga o lista de valori in matrice
+void adauga(vector<double> valoare)
+{
+  for(int i = 0; i < valoare.size(); i++)
+      this->v_adauga(valoare[i]);
+}
+```
+</p>
+</details>
+
+
+<details>
+<summary> 4. Funcția de vectorizare </summary>
 <p>
    
   > Parametri : - <br>
@@ -231,6 +259,9 @@ Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si s
       }
   }
 
+  this->forma[0] = this->linii;
+  this->forma[1] = this->coloane;
+
   return vector_nou;  // returnam noua matrice de tip coloana
 }
 ```
@@ -239,7 +270,7 @@ Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si s
 </details>
 
 <details>
-<summary> 4. Functia de randomizare </summary>
+<summary> 5. Functia de randomizare </summary>
 <p>
    
   > Parametri : <br>
@@ -278,7 +309,7 @@ void randomizare(vector<Matrice> input, vector<Matrice> output, int numar_inputu
 </details>
 
 <details>
-<summary> 5. Funcția de schimbare de formă </summary>
+<summary> 6. Funcția de schimbare de formă </summary>
 <p>
    
   > Parametri : <br>
@@ -290,10 +321,10 @@ void randomizare(vector<Matrice> input, vector<Matrice> output, int numar_inputu
   > Returnează : returnează matricea 
    
 ```c++
-/* Functia "forma" schimba dimensiunea unei matrice.
+/* Functia "sforma" schimba dimensiunea unei matrice.
  Functia are doar doi parametri, prima dimensiune si a doua, acestea reprezinta
  dimensiunile in care dorim sa convertim matricea. */
-Matrice forma(int dimensiune1, int dimensiune2)
+Matrice sforma(int dimensiune1, int dimensiune2)
 {
   if(dimensiune1 * dimensiune2 == this->coloane * this->linii)  // daca produsul dimensiunilor introduse e egal cu cel al matricei se va realiza conversia.
   {
@@ -311,6 +342,9 @@ Matrice forma(int dimensiune1, int dimensiune2)
           }
       }
 
+      this->forma[0] = this->linii;
+      this->forma[1] = this->coloane;
+
       return vn;  // returnam matricea
 
   }
@@ -327,7 +361,7 @@ Matrice forma(int dimensiune1, int dimensiune2)
 </details>
 
 <details>
-<summary> 6. Funcția de transpunere a unei matrice </summary>
+<summary> 7. Funcția de transpunere a unei matrice </summary>
 <p>
    
   > Parametri : - <br> 
@@ -335,18 +369,33 @@ Matrice forma(int dimensiune1, int dimensiune2)
   > Returnează : returnează matricea transpusă
 
 ```c++
-/* Aceasta functie calculeaza transpusa matricei, exemplu : pentru o matrice de (3, 1), o va converti in (1, 3) */
 Matrice transpusa()
 {
-  Matrice matrice(0, 0, "valoare", 1);
-  int coloane = this->coloane;  // retine numarul de coloane ale matricei in "coloane"
-  int linii = this->linii;  // retine numarul de linii ale matricei in "linii"
 
-  matrice = this->forma(coloane, linii);  // schimba forma matricei, liniile devin coloane, iar coloanele devin linii
+  int linii, coloane;
+  linii = this->linii;
+  coloane = this->coloane;
 
-  return matrice;  // returneaza matricea
+  Matrice vector_nou(0,0,"valoare",0), vn(coloane, linii, "valoare", 0);  // initializarea unui nou vector, in care sunt copiate informatiile matricei
+  vector_nou = this->vectorizare();  // transformarea matricei intr-o matrice de tip coloana
+
+  int index = 0;  // initializam un index care va fi pozitia in functie de linii si coloane
+  for(int i = 0;i < coloane; i++)  // parcurgerea liniilor in functie de dimensiunea introdusa
+  {
+      for(int j = 0; j < linii; j++)  // parcurgerea liniilor in functie de dimensiunea introdusa
+      {
+          vn.valori[i][j] = vector_nou.valori[0][index];  // atribuirea noului vector cu valorile din matricea coloana principala
+          index++;
+      }
+  }
+
+  this->forma[0] = this->linii;
+  this->forma[1] = this->coloane;
+
+  return vn;  // returnam matricea
 
 }
+
 
 ```
 
@@ -354,7 +403,7 @@ Matrice transpusa()
 </details>
 
 <details>
-<summary> 7. Funcția sigmoidală </summary>
+<summary> 8. Funcția sigmoidală </summary>
 <p>
 
    > Parametri : <br>
@@ -377,7 +426,7 @@ double sigmoid(double x)
  
  
 <details>
-<summary> 8. Funcția sigmoidală aplicată matricei </summary>
+<summary> 9. Funcția sigmoidală aplicată matricei </summary>
 <p>
    
    
@@ -407,7 +456,7 @@ Matrice sigmoid_matrice()
 </details>  
 
 <details>
-<summary> 9. Funcția sigmoidală (derivata) </summary>
+<summary> 10. Funcția sigmoidală (derivata) </summary>
 <p>
    
    
@@ -432,7 +481,7 @@ double d_sigmoid(double x)
 
 
 <details>
-<summary> 10. Funcția sigmoidală (derivata) aplicată matricei </summary>
+<summary> 11. Funcția sigmoidală (derivata) aplicată matricei </summary>
 <p>
    
    > Parametri : - <br>
@@ -711,6 +760,30 @@ Matrice operator%(Matrice matrice1, Matrice matrice2)
 
 </p>
 </details>  
+
+<details>
+<summary> 7. Funcția de afișare a formei unei matrice </summary>
+<p>
+
+> Parametri : - <br>
+
+
+> Returnează : forma matricei
+
+```c++
+
+// Acesta este operatorul pentru afisarea formei matricei
+ostream& operator<<(ostream &out, int f_vector[])
+{
+  out << "(" << f_vector[0] << ", " << f_vector[1] << ")";
+  return out;
+}
+
+```
+
+</p>
+</details>  
+
 
 # FUNCȚIILE SPECIFICE LUCRULUI CU REȚEAUA NEURONALĂ (odin.hpp)
 ---
