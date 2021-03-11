@@ -36,7 +36,7 @@ public:
         int structura_int[1000]; // aici este un vector de int, care va retine fiecare numar de neuroni din fiecare hidden layer
         while(p != NULL)
         {
-            structura_int[index] = stoi(p);  // converteste pointerul in int si il retine in vectorul specficic
+            structura_int[index] = atoi(p);  // converteste pointerul in int si il retine in vectorul specficic
             p = strtok(NULL, ", [ ]");  // pointeaza la urmatorul string
             index++;  // incrementeaza pozitia vectorului
         }
@@ -93,11 +93,11 @@ public:
                 for(int j = index - 2 - 1; j >= 0; j -- )  // parcurgere hidden layers
                 {
 
-                    weights[j+1] = weights[j+1].transpusa(weights[j + 1]);  // facem transpusa matricei pentru a putea realiza operatiile viitoare
+                    weights[j+1] = weights[j+1].transpusa();  // facem transpusa matricei pentru a putea realiza operatiile viitoare
 
                     erori_hidden_layers[j] = weights[j + 1] * erori_hidden_layers[j + 1];  // distribuim erorile pe pozitia j in functie de cele de pe pozitia j+1
 
-                    weights[j+1] = weights[j+1].transpusa(weights[j + 1]); // aducem matricea la forma initiala, aplicand inca o data traspusa
+                    weights[j+1] = weights[j+1].transpusa(); // aducem matricea la forma initiala, aplicand inca o data traspusa
 
 
 
@@ -131,15 +131,15 @@ public:
 
                 for(int j = index - 2; j >= 1; j--)
                 {
-                    hidden_layers[j - 1] = hidden_layers[j-1].transpusa(hidden_layers[j - 1]); // transpusa matricei
+                    hidden_layers[j - 1] = hidden_layers[j-1].transpusa(); // transpusa matricei
                     delta_weights[j] = gradienturi[j] * hidden_layers[j - 1];  // calculam delta weights-urile pentru a putea adauga diferenta necesara in vederea imbunatatirii retelei neuronale, acesta valori sunt relativ mici.
-                    hidden_layers[j - 1] = hidden_layers[j - 1].transpusa(hidden_layers[j - 1]);  // revenirea la forma initiala a matricei
+                    hidden_layers[j - 1] = hidden_layers[j - 1].transpusa();  // revenirea la forma initiala a matricei
                 }
 
-                input[i] = input[i].transpusa(input[i]);  // transpusa input-ului
+                input[i] = input[i].transpusa();  // transpusa input-ului
 
                 delta_weights[0] = gradienturi[0] * input[i];  // calculam delta weights-urile necesare pentru input-uri
-                input[i] = input[i].transpusa(input[i]);  // revenim la forma initiala a input-urilor
+                input[i] = input[i].transpusa();  // revenim la forma initiala a input-urilor
 
 
                 // folosind acest for actualizam sinapsele in functie de delta_weights (pe care le-am calculat la pasii anteriori)
@@ -174,7 +174,7 @@ public:
         int structura_int[1000];
         while(p != NULL)
         {
-            structura_int[index] = stoi(p);
+            structura_int[index] = atoi(p);
             p = strtok(NULL, ", [ ]");
             index++;
         }
@@ -350,12 +350,12 @@ public:
 
                     if(pos < pct.size() / 2)  // daca sunt citite sinapsele
                     {
-                        matrice = matrice.forma(pct[pos].x, pct[pos].y);  // schimba forma matricei in functie de dimensiunile din vectorul construit anterior
+                        matrice = matrice.sforma(pct[pos].x, pct[pos].y);  // schimba forma matricei in functie de dimensiunile din vectorul construit anterior
                         weights.push_back(matrice);  // adauga matricea in vectorul de sinapse
                     }
                     else  // altfel sunt citite bias-urile
                     {
-                        matrice = matrice.forma(pct[pos].x, pct[pos].y); // schimba forma matricei in functie de dimensiunile din vectorul construit anterior
+                        matrice = matrice.sforma(pct[pos].x, pct[pos].y); // schimba forma matricei in functie de dimensiunile din vectorul construit anterior
                         biases.push_back(matrice);  // adauga matricea in vectorul de bias-uri
                     }
 
@@ -382,4 +382,6 @@ public:
 
     }
 };
+
+
 
