@@ -13,6 +13,7 @@ public:
 
     int linii = 0, coloane = 0;
     vector<vector<double>> valori;
+    int forma[2];
 
     // Constructorul clasei
     Matrice (int numar_linii, int numar_coloane, string tip_matrice, double valoare)
@@ -70,11 +71,14 @@ public:
 
         }
 
+        this->forma[0] = numar_linii;
+        this->forma[1] = numar_coloane;
+
 
     }
 
 
-    void adauga(double valoare)  /* unicul parametru al functiei este de tip double,
+    void v_adauga(double valoare)  /* unicul parametru al functiei este de tip double,
     reprezentand valoarea ce va fi adaugata in matrice */
     {
         Matrice vector_nou(1, this->linii * this->coloane + 1, "valoare", 0);  /* initializarea unei matrice care va stoca informatiile anterioare,
@@ -101,7 +105,17 @@ public:
         this->coloane = vector_nou.coloane;  // setam numarul de coloane in functie de numarul de coloane ale matricei construite in functie
         this->valori = vector_nou.valori;  // preluam valorile din vector si le setam matricei
 
+        this->forma[0] = this->linii;
+        this->forma[1] = this->coloane;
 
+
+    }
+
+    // Functia ce adauga o lista de valori in matrice
+    void adauga(vector<double> valoare)
+    {
+        for(int i = 0; i < valoare.size(); i++)
+            this->v_adauga(valoare[i]);
     }
 
     Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si simplu schimba forma matricei intr-o matrice de tip coloana.
@@ -119,13 +133,16 @@ public:
             }
         }
 
+        this->forma[0] = this->linii;
+        this->forma[1] = this->coloane;
+
         return vector_nou;  // returnam noua matrice de tip coloana
     }
 
-    /* Functia "forma" schimba dimensiunea unei matrice.
+    /* Functia "sforma" schimba dimensiunea unei matrice.
        Functia are doar doi parametri, prima dimensiune si a doua, acestea reprezinta
        dimensiunile in care dorim sa convertim matricea. */
-    Matrice forma(int dimensiune1, int dimensiune2)
+    Matrice sforma(int dimensiune1, int dimensiune2)
     {
         if(dimensiune1 * dimensiune2 == this->coloane * this->linii)  // daca produsul dimensiunilor introduse e egal cu cel al matricei se va realiza conversia.
         {
@@ -142,6 +159,9 @@ public:
                     index++;
                 }
             }
+
+            this->forma[0] = this->linii;
+            this->forma[1] = this->coloane;
 
             return vn;  // returnam matricea
 
@@ -199,7 +219,7 @@ public:
         for(int i = 0; i < coloane * linii; i++)  // parcurge toate elementele matricei
             matrice.valori[0][i] = sigmoid(matrice.valori[0][i]);  // aplica functia sigmoidala pentru fiecare valoare
 
-        matrice = matrice.forma(linii, coloane);  // schimba forma matricei la cea initiala
+        matrice = matrice.sforma(linii, coloane);  // schimba forma matricei la cea initiala
     }
 
     // Derivata functiei sigmoidale aplicata matricei
@@ -213,21 +233,36 @@ public:
         for(int i = 0; i < coloane * linii; i++)  // parcurge toate elementele matricei
             matrice.valori[0][i] = d_sigmoid(matrice.valori[0][i]);  // aplica derivata sigmoidalei pentru fiecare valoare din matrice
 
-        matrice = matrice.forma(linii, coloane);  // schimba forma matricei la cea initiala
+        matrice = matrice.sforma(linii, coloane);  // schimba forma matricei la cea initiala
     }
 
     /* Aceasta functie calculeaza transpusa matricei, exemplu : pentru o matrice de (3, 1), o va converti in (1, 3) */
-    Matrice transpusa(Matrice matrice)
+    Matrice transpusa()
     {
-        int coloane = matrice.coloane;  // retine numarul de coloane ale matricei in "coloane"
-        int linii = matrice.linii;  // retine numarul de linii ale matricei in "linii"
 
-        matrice = matrice.forma(coloane, linii);  // schimba forma matricei, liniile devin coloane, iar coloanele devin linii
+        int linii, coloane;
+        linii = this->linii;
+        coloane = this->coloane;
 
-        return matrice;  // returneaza matricea
+        Matrice vector_nou(0,0,"valoare",0), vn(coloane, linii, "valoare", 0);  // initializarea unui nou vector, in care sunt copiate informatiile matricei
+        vector_nou = this->vectorizare();  // transformarea matricei intr-o matrice de tip coloana
+
+        int index = 0;  // initializam un index care va fi pozitia in functie de linii si coloane
+        for(int i = 0;i < coloane; i++)  // parcurgerea liniilor in functie de dimensiunea introdusa
+        {
+            for(int j = 0; j < linii; j++)  // parcurgerea liniilor in functie de dimensiunea introdusa
+            {
+                vn.valori[i][j] = vector_nou.valori[0][index];  // atribuirea noului vector cu valorile din matricea coloana principala
+                index++;
+            }
+        }
+
+        this->forma[0] = this->linii;
+        this->forma[1] = this->coloane;
+
+        return vn;  // returnam matricea
 
     }
-
 
 
 
@@ -250,6 +285,13 @@ namespace odin
         }
         return out;  // returneaza "afisarea"
 
+    }
+
+    // Acesta este operatorul pentru afisarea formei matricei
+    ostream& operator<<(ostream &out, int f_vector[])
+    {
+        out << "(" << f_vector[0] << ", " << f_vector[1] << ")";
+        return out;
     }
 
     // Acesta este operatorul de adunare, face suma intre doua matrice (matrice1 + matrice2)
