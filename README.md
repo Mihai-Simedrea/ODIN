@@ -791,8 +791,8 @@ ostream& operator<<(ostream &out, int f_vector[])
 
 /// Acesta este constructorul retelei. Are 4 parametri : 
 /// - input-ul : reprezinta vectorul de input-uri.
-/// - output-ul : reprezinta vectorul de output-uri.
-/// - structura : structura specifica retelei neuronale.
+/// - output-ul : reprezinta vectorul de output-uri (POATE FI OMIS, doar in cazul in care se incarca o structura din fisier)
+/// - structura : structura specifica retelei neuronale (POATE FI OMISA, doar in cazul in care se incarca o structura din fisier)
 /// - rata de invatare : POATE FI OMISA (default : 0.8)
 ReteaNeuronala model(input, output, "[2, 2, 1]", 0.8);
 
