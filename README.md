@@ -103,56 +103,49 @@ Matrice (int numar_linii, int numar_coloane, std::string tip_matrice, double val
   mt19937 mt(rd());
   uniform_real_distribution<double> dist(-valoare, valoare);
 
-  /*
-  if(numar_linii < 0 || numar_coloane < 0)  // daca numarul de linii sau coloane este mai mic decat 0, initializarea nu are sens si nu va avea loc.
+  //Matrice matrice; // initializarea unei matrice care va reprezenta matricea initializata in fisierul .cpp
+  bool val = false;
+  bool random = false;
+
+
+  /* Aceste structuri decizionale verifica tipul matricei, transmis ca parametru prin functia principalt */
+  if(tip_matrice == "valoare")
+      val = true;
+  if(tip_matrice == "random")
+      random = true;
+
+
+  for (int h = 0; h < numar_linii; h++)  // parcurgem numarul de linii al matricei
   {
-      std::cout << " > Numarul de linii si coloane trebuie sa fie pozitiv. \n";
-      throw int(1);
-  }*/
-
-  //else
-  //{
-      //Matrice matrice; // initializarea unei matrice care va reprezenta matricea initializata in fisierul .cpp
-      bool val = false;
-      bool random = false;
-
-
-      /* Aceste structuri decizionale verifica tipul matricei, transmis ca parametru prin functia principalt */
-      if(tip_matrice == "valoare")
-          val = true;
-      if(tip_matrice == "random")
-          random = true;
-
-
-      for (int h = 0; h < numar_linii; h++)  // parcurgem numarul de linii al matricei
+      vector<double> temp;  // initializam un vector temporar care va retine valorile de pe linia "h"
+      for (int w = 0; w < numar_coloane; w++)  // parcurgem numarul de coloane
       {
-          vector<double> temp;  // initializam un vector temporar care va retine valorile de pe linia "h"
-          for (int w = 0; w < numar_coloane; w++)  // parcurgem numarul de coloane
+          if(val)  // daca tipul matricei este "valoare" adaugam in vectorul temporar valoarea respectiva
+              temp.push_back(valoare);
+          else if(random)  // altfel adaugam un numar random in intervalul cunoscut
           {
-              if(val)  // daca tipul matricei este "valoare" adaugam in vectorul temporar valoarea respectiva
-                  temp.push_back(valoare);
-              else if(random)  // altfel adaugam un numar random in intervalul cunoscut
-              {
 
-                  temp.push_back((dist(mt)));
-              }
-
+              temp.push_back((dist(mt)));
           }
-
-          this->valori.push_back(temp);  // adaugam linia curenta in matrice
 
       }
 
-      this->linii = numar_linii;  // preluam numarul de linii al matricei si il atribuim clasei
-      this->coloane = numar_coloane;  // preluam numarul de coloane al matricei si il atribuim clasei
+      this->valori.push_back(temp);  // adaugam linia curenta in matrice
 
-  //}
+  }
+
+  this->linii = numar_linii;  // preluam numarul de linii al matricei si il atribuim clasei
+  this->coloane = numar_coloane;  // preluam numarul de coloane al matricei si il atribuim clasei
+
+
 
   this->forma[0] = numar_linii;
   this->forma[1] = numar_coloane;
 
 
 }
+
+
 ```
     
   </p>
@@ -844,7 +837,7 @@ void antreneaza(int iteratii, bool GUI = false)  // primeste un singur parametru
   if(GUI)
   {
       structura_nou.erase( remove( structura_nou.begin(), structura_nou.end(), ' ' ), structura_nou.end()); // sterge spatiile din string
-      system("start GUI.exe"); // deschide GUI-ul si porneste serverul
+      system("start Lib/GUI.exe"); // deschide GUI-ul si porneste serverul
 
       system("cls");
       int i = 10;
@@ -859,7 +852,7 @@ void antreneaza(int iteratii, bool GUI = false)  // primeste un singur parametru
           sleep(1);
           system("cls");
       }
-      std::cout << endl;
+      std::cout << '\n';
 
 
   }
@@ -1034,7 +1027,7 @@ void verificare(int zecimale = 6, bool GUI = false)
   if(GUI)
   {
       structura_nou.erase( remove( structura_nou.begin(), structura_nou.end(), ' ' ), structura_nou.end()); // sterge spatiile din string
-      system("start GUI.exe"); // deschide GUI-ul si porneste serverul
+      system("start Lib/GUI.exe"); // deschide GUI-ul si porneste serverul
       system("cls");
       int i = 10;
       while(i > 0)
@@ -1048,7 +1041,7 @@ void verificare(int zecimale = 6, bool GUI = false)
           sleep(1);
           system("cls");
       }
-      std::cout << endl;
+      std::cout << '\n';
   }
 
   vector<Matrice> hidden_layers;
@@ -1362,7 +1355,116 @@ void incarcare(char fisier[])
 </p>
 </details>  
 
+# FUNCȚIILE SPECIFICE LUCRULUI CU SERVERUL (client.hpp)
+---
+
+În acest fișier se găsește următoarea funcție : 
+
+<details>
+<summary> 1. Funcția de conectare la server </summary>
+<p>
+
+
+> Parametri : <br>
+<p>
+<b>iteratii</b> : iterația curentă (tip : int) <br>
+<b>weights</b> : vectorul de sinapse (tip : vector<Matrice>) <br>
+<b>structura</b> : numărul de neuroni specific rețelei (tip : string) <br>
+<b>hidden_layers</b> : vectorul de hidden_layers (tip : vector<Matrice>) <br>
+</p>
+
+> Returnează : -
+
+</p>
+
+```c++
+// Aceasta functie a fost creata pentru a putea trimite date serverului
+// In momentul in care serverul primeste informatii despre WEIGHTS si HIDDEN LAYERS, le prelucreaza pentru a realiza interfata grafica specifica structurii
+
+SOCKET conectare_server(int iteratii, vector<Matrice> weights, string structura, int index, vector<Matrice> hidden_layers)
+{
+    WSADATA data;
+    WORD version = MAKEWORD(2, 2);
+
+    int wsOk = WSAStartup(version, &data);
+
+    if(wsOk != 0)
+        return 0 ;
+
+    sockaddr_in server;
+    server.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+    server.sin_family = AF_INET;
+    server.sin_port = htons(54000);
+
+    inet_ntoa(server.sin_addr);
+
+    SOCKET out = socket(AF_INET, SOCK_DGRAM, 0);
+
+    if(index == 0)
+        close(out);
+
+    string valoriMatrice = "";
+    valoriMatrice += structura;
+    valoriMatrice += "{";
+
+    for(int z = 0; z <= index - 2; z++)
+    {
+        for(int i = 0; i<hidden_layers[z].linii; i++)
+        {
+            for(int j = 0; j<hidden_layers[z].coloane; j++)
+            {
+                valoriMatrice += to_string(hidden_layers[z].valori[i][j]);
+
+                if(i != hidden_layers[z].linii)
+                    valoriMatrice += ",";
+            }
+        }
+    }
+
+    valoriMatrice += "} ";
+
+    for(int z = 0; z <= index-2; z++)
+    {
+        for(int i = 0; i<weights[z].linii; i++)
+        {
+            for(int j = 0; j<weights[z].coloane; j++)
+            {
+                valoriMatrice += to_string(weights[z].valori[i][j]);
+                valoriMatrice += " ";
+            }
+        }
+    }
+
+
+    if(valoriMatrice.size() < 65535)
+    {
+        if(index == 0)
+        {
+            int sendOk = sendto(out, "end", 1, 0, (sockaddr*)&server, sizeof(server));
+            return out;
+            close(out);
+        }
+        else
+            int sendOk = sendto(out, valoriMatrice.c_str(), valoriMatrice.size() + 1, 0, (sockaddr*)&server, sizeof(server));
+    }
+    else
+    {
+        std::cout << '\n' << "Cantitatea de informatii depaseste limita permisa de o conexiune UDP ( " << valoriMatrice.size() << " > 65535 )" << '\n' << "Numarul de layere ale structurii trebuie redus pentru a vizualiza structura neuronala \n";
+        exit(0);
+    }
 
 
 
+
+    closesocket(out);
+    WSACleanup();
+    return 0;
+
+}
+
+
+
+```
+
+</details>
 
