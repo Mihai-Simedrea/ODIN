@@ -1468,3 +1468,337 @@ SOCKET conectare_server(int iteratii, vector<Matrice> weights, string structura,
 
 </details>
 
+<details>
+<summary> 2. SERVER-UL </summary>
+
+```python
+
+import socket
+import tkinter as tk
+import os
+
+root = tk.Tk()
+root.title("ODIN - GUI")
+root.geometry("1280x720")
+canvas = tk.Canvas(root, width=1280, height=720, bg='white')
+canvas.pack()
+
+
+
+localIP = "127.0.0.1"
+
+localPort = 54000
+
+bufferSize = 65535
+
+
+UDPServerSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+
+UDPServerSocket.bind((localIP, localPort))
+
+
+def draw_circle(posX, posY, size, color):
+    canvas.create_oval(posX - size/2, posY - size/2, posX + size / 2, posY + size / 2, fill = color)
+
+def draw_line(posX, posY, posX_e, posY_e, color):
+    canvas.create_line(posX, posY, posX_e, posY_e, fill = color, width = 1)
+
+
+def connect_layers(center_list, weights_values):
+
+    index = 0
+    values = []
+
+    try:
+        for i in range(1, len(weights_values)):
+            values.append(weights_values[i])
+    except:
+        pass
+
+    for k in range(0, len(val)):
+
+        for i in range(0, len(center_list)):
+
+            x_c_start = center_list[i][1]
+            y_c_start = center_list[i][2]
+
+            for j in range(0, len(center_list)):
+
+                x_c_end = center_list[j][1]
+                y_c_end = center_list[j][2]
+
+
+                if center_list[i][0] == k and center_list[j][0] == k+1:
+
+                    color = 'white'
+
+
+                    try:
+
+                        if float(values[index]) >= 0:
+                            r = 0
+                            g = 255
+                            b = 68
+
+                            g *= (float(values[index]) / 2)
+                            g = int(g)
+                            g = abs(g)
+
+                            if g > 255:
+                                g = 255
+
+                            color = '#%02x%02x%02x' % (r, g, b)
+                        else:
+
+                            r = 255
+                            g = 0
+                            b = 0
+
+                            r *= (float(values[index]) / 2)
+                            r = int(r)
+                            r = abs(r)
+
+                            if r > 255:
+                                r = 255
+
+                            color = '#%02x%02x%02x' % (r, g, b)
+                    except:
+                        pass
+
+                    draw_line(x_c_start, y_c_start, x_c_end, y_c_end, color)
+                    index += 1
+
+
+
+
+
+ok = True
+size = 100
+center_points = []
+
+def on_closing():
+    os.system("TASKKILL /F /IM GUI.exe")
+    root.quit()
+    root.destroy()
+
+while True:
+
+
+    try:
+        bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+
+        message = bytesAddressPair[0]
+
+        address = bytesAddressPair[1]
+
+        clientMsg = message.decode('utf-8')
+    except:
+        clientMsg = 'end'
+
+    if clientMsg == 'end':
+        UDPServerSocket.close()
+
+    step = 5
+    step2 = 0
+    padding = 20
+
+    indexHL = 0
+    structure = ''
+    for i in range(0, len(clientMsg)):
+        if clientMsg[i] == ']':
+            break
+        else:
+            indexHL += 1
+            structure += clientMsg[i]
+
+    structure += ']'
+    structureHL = ''
+
+    for i in range(indexHL + 1, len(clientMsg)):
+        if clientMsg[i] == '}':
+            break
+        else:
+            structureHL += clientMsg[i]
+
+    val = structure.strip(', ] [').split(',')
+    vmax = -3000000
+
+    valHL = structureHL.strip(', } {').split(',')
+
+    for i in range(0, len(val)):
+        v = int(val[i])
+        if v > vmax:
+            vmax = v
+
+    if ok == True:
+        size = 1280/(len(val) * vmax)
+        padding = padding/(vmax/5)
+        size_increment = size
+
+
+        for i in range(0, len(val)):
+
+            if int(val[i]) == 1:
+                x_c = (size/2) + step
+                y_c = 720/2
+
+                center_points.append((i, x_c , y_c ))
+
+            else:
+                for j in range(0, int(val[i])):
+                    x_c = (size/2) + step
+                    y_c = 720/2 - (int(val[i]) - 1 )*size/2 + step2 - (int(val[i]) - 1)*padding/2
+
+                    center_points.append((i, x_c , y_c ))
+
+                    step2 += size + padding
+
+            step2 = 0
+            step += 1280 / (len(val))
+
+
+        ok = False
+
+        connect_layers(center_points, clientMsg.split(' '))
+
+        step = 5
+        step2 = 0
+        padding = 20
+        size = 1280 / (len(val) * vmax)
+        padding = padding / (vmax / 5)
+        size_increment = size
+
+        for i in range(0, len(val)):
+
+            if int(val[i]) == 1:
+                draw_circle((size / 2) + step, 720 / 2, size, 'white')
+
+            else:
+                for j in range(0, int(val[i])):
+                    draw_circle((size / 2) + step,
+                                720 / 2 - (int(val[i]) - 1) * size / 2 + step2 - (int(val[i]) - 1) * padding / 2, size, 'white')
+                    step2 += size + padding
+
+            step2 = 0
+            step += 1280 / (len(val))
+
+
+
+
+    try:
+        canvas.delete('all')
+        connect_layers(center_points, clientMsg.split(' '))
+
+        step = 5
+        step2 = 0
+        padding = 20
+        size = 1280 / (len(val) * vmax)
+        padding = padding / (vmax / 5)
+        size_increment = size
+        color = 'white'
+
+        s = 0
+
+        indexHL = 0
+        for i in range(0, len(val)):
+            if int(val[i]) == 1:
+
+                color = 'white'
+
+                if i != 0:
+                    try:
+
+                        if float(valHL[indexHL]) >= 0.5:
+                            r = 0
+                            g = 255
+                            b = 68
+
+                            g *= (float(valHL[indexHL]))
+                            g = int(g)
+                            g = abs(g)
+
+                            if g > 255:
+                                g = 255
+
+                            color = '#%02x%02x%02x' % (r, g, b)
+                        else:
+
+                            r = 255
+                            g = 0
+                            b = 0
+
+                            r *= (float(valHL[indexHL]) + 0.5)
+                            r = int(r)
+                            r = abs(r)
+
+                            if r > 255:
+                                r = 255
+
+                            color = '#%02x%02x%02x' % (r, g, b)
+                    except:
+                        pass
+
+                    indexHL += 1
+                draw_circle((size / 2) + step, 720 / 2, size, color)
+
+
+            else:
+                color = 'white'
+                for j in range(0, int(val[i])):
+
+
+                    color = 'white'
+
+                    if i != 0:
+                        try:
+
+                            if float(valHL[indexHL]) >= 0.5:
+                                r = 0
+                                g = 255
+                                b = 68
+
+                                g *= (float(valHL[indexHL]))
+                                g = int(g)
+                                g = abs(g)
+
+                                if g > 255:
+                                    g = 255
+
+                                color = '#%02x%02x%02x' % (r, g, b)
+                            else:
+
+                                r = 255
+                                g = 0
+                                b = 0
+
+                                r *= ((float(valHL[indexHL]) + 0.5) )
+                                r = int(r)
+                                r = abs(r)
+
+                                if r > 255:
+                                    r = 255
+
+                                color = '#%02x%02x%02x' % (r, g, b)
+                        except:
+                            pass
+
+                        indexHL += 1
+
+                    draw_circle((size / 2) + step,
+                                720 / 2 - (int(val[i]) - 1) * size / 2 + step2 - (int(val[i]) - 1) * padding / 2, size, color)
+                    step2 += size + padding
+
+
+
+            step2 = 0
+            step += 1280 / (len(val))
+
+        root.protocol("WM_DELETE_WINDOW", on_closing)
+        root.update()
+    except:
+        pass
+
+
+
+```
+
