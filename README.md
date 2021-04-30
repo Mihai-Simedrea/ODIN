@@ -1469,7 +1469,7 @@ SOCKET conectare_server(int iteratii, vector<Matrice> weights, string structura,
 </details>
 
 <details>
-<summary> 2. SERVER-UL </summary>
+<summary> 2. SERVER-UL + INTERFAȚA GRAFICĂ</summary>
 
 ```python
 
