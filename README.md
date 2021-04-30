@@ -6,7 +6,7 @@
 
 # CUM SE INSTALEAZĂ ODIN?
 ---
-Pentru a inițializa ODIN va trebui să descărcați fișierele necesare funcționării acesteia, ci anume : fișierul Lib care conține : matrice.hpp și odin.hpp. 
+Pentru a inițializa ODIN va trebui să descărcați fișierele necesare funcționării acesteia, ci anume : fișierul Lib care conține : matrice.hpp, odin.hpp, client.hpp și GUI.exe. 
 Apoi, în fișierul .cpp, includerea bibliotecii poate fi realizată folosind comanda #include "Lib/odin.hpp"
 
 # UN SCURT EXEMPLU AL UNUI PROGRAM ODIN
