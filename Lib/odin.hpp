@@ -11,6 +11,7 @@ using namespace odin;
 
 
 bool thread2_start = true;
+vector<Matrice> aux;
 
 DWORD WINAPI thread2(LPVOID pm)
 {
@@ -48,7 +49,7 @@ private:
 
 public:
 
-    ReteaNeuronala(vector<Matrice> input_retea, vector<Matrice> output_retea, string structura_retea, double rata_de_invatare_retea = 0.8)
+    ReteaNeuronala(vector<Matrice> input_retea, vector<Matrice> output_retea = aux, string structura_retea = "[]", double rata_de_invatare_retea = 0.8)
     {
         input = input_retea;
         output = output_retea;
