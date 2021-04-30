@@ -44,7 +44,7 @@ int main()
 
    input.push_back(Matrice(1, 1, "valoare", 1));
    input[3].adauga({0});
-   input[3] = input[2].sforma(2, 1);
+   input[3] = input[3].sforma(2, 1);
 
 
    /// OUTPUTURI
@@ -57,16 +57,12 @@ int main()
 
 
    /// RETEA NEURONALA
-   ReteaNeuronala model;  // declararea rețelei neuronale în ”model”.
-   model.input = input;  // atribuirea input-urilor create anterior.
-   model.output = output;  // atribuirea output-urilor create anterior.
-   model.rata_de_invatare = 0.2;  // rata de învățare poate fi omisă, aceasta este default ”0.8”.
-   model.structura = "[2, 2, 1]";  /* folosind această comandă putem stabili arhitectura programului.
-   În cazul nostru, avem 2 neuroni pentru input-uri, 2 neuroni pentru
-   primul hidden layer și un singur neuron pentru output. */
+   ReteaNeuronala model(input, output, "[2, 2, 1]");  // declararea rețelei neuronale în ”model”.
    model.antreneaza(20000);  // antrenarea funcției pentru 20000 de iterații.
    model.verificare(); // această funcție afișează output-ul pentru toate valorile din input.
+   model.salvare("model"); // această funcție salvează modelul în fișierul "model.odin".
 }
+
 
 
 ```
