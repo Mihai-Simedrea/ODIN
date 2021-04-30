@@ -92,7 +92,7 @@ int main()
 ---
        
 ```c++
-Matrice (int numar_linii, int numar_coloane, string tip_matrice, double valoare)
+Matrice (int numar_linii, int numar_coloane, std::string tip_matrice, double valoare)
 {
 
 
@@ -103,14 +103,15 @@ Matrice (int numar_linii, int numar_coloane, string tip_matrice, double valoare)
   mt19937 mt(rd());
   uniform_real_distribution<double> dist(-valoare, valoare);
 
+  /*
   if(numar_linii < 0 || numar_coloane < 0)  // daca numarul de linii sau coloane este mai mic decat 0, initializarea nu are sens si nu va avea loc.
   {
-      cout << " > Numarul de linii si coloane trebuie sa fie pozitiv." << endl;
+      std::cout << " > Numarul de linii si coloane trebuie sa fie pozitiv. \n";
       throw int(1);
-  }
+  }*/
 
-  else
-  {
+  //else
+  //{
       //Matrice matrice; // initializarea unei matrice care va reprezenta matricea initializata in fisierul .cpp
       bool val = false;
       bool random = false;
@@ -145,16 +146,13 @@ Matrice (int numar_linii, int numar_coloane, string tip_matrice, double valoare)
       this->linii = numar_linii;  // preluam numarul de linii al matricei si il atribuim clasei
       this->coloane = numar_coloane;  // preluam numarul de coloane al matricei si il atribuim clasei
 
-  }
+  //}
 
   this->forma[0] = numar_linii;
   this->forma[1] = numar_coloane;
 
 
 }
-
-}
-
 ```
     
   </p>
@@ -298,11 +296,12 @@ void randomizare(vector<Matrice> input, vector<Matrice> output, int numar_inputu
   for(int i = 0; i < numar_inputuri; i++)  // parcurgem numarul de elemente care vor fi randomizate
   {
       int random = dist(mt);  // retinem in variabila random o valoare random in intervalul [0, numar_inputuri]
-      swap(input[i], input[random]);  // schimbam valorile de pe pozitia curenta, cu cele de pe pozitia generata random
-      swap(output[i], output[random]);  // schimbam valorile de pe pozitia curenta, cu cele de pe pozitia generata random
+      std::swap(input[i], input[random]);  // schimbam valorile de pe pozitia curenta, cu cele de pe pozitia generata random
+      std::swap(output[i], output[random]);  // schimbam valorile de pe pozitia curenta, cu cele de pe pozitia generata random
 
   }
 }
+
 ```
 
 </p>
@@ -321,9 +320,6 @@ void randomizare(vector<Matrice> input, vector<Matrice> output, int numar_inputu
   > Returnează : returnează matricea 
    
 ```c++
-/* Functia "sforma" schimba dimensiunea unei matrice.
- Functia are doar doi parametri, prima dimensiune si a doua, acestea reprezinta
- dimensiunile in care dorim sa convertim matricea. */
 Matrice sforma(int dimensiune1, int dimensiune2)
 {
   if(dimensiune1 * dimensiune2 == this->coloane * this->linii)  // daca produsul dimensiunilor introduse e egal cu cel al matricei se va realiza conversia.
@@ -350,7 +346,7 @@ Matrice sforma(int dimensiune1, int dimensiune2)
   }
   else  // daca dimensiunile nu sunt corespunzatoare operatia nu poate fi realizata
   {
-      cout << " > Dimensiunea matricei nu poate fi schimbata deoarece valorile introduse nu corespund cu numarul de linii si coloane ale matricei introduse." << endl;
+      std::cout << " > Dimensiunea matricei nu poate fi schimbata deoarece valorile introduse nu corespund cu numarul de linii si coloane ale matricei introduse. \n";
       throw int(6);
   }
 
@@ -369,6 +365,7 @@ Matrice sforma(int dimensiune1, int dimensiune2)
   > Returnează : returnează matricea transpusă
 
 ```c++
+/* Aceasta functie calculeaza transpusa matricei, exemplu : pentru o matrice de (3, 1), o va converti in (1, 3) */
 Matrice transpusa()
 {
 
@@ -395,6 +392,7 @@ Matrice transpusa()
   return vn;  // returnam matricea
 
 }
+
 
 
 ```
@@ -684,29 +682,32 @@ Matrice operator*(Matrice matrice1, Matrice matrice2)
 
   if (ok)
   {
+
       for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
       {
-          for(int j = 0;j < matrice2.coloane; j++)  // parcurgerea coloanelor
+          int k = 0;
+          for(int z = 0; z < matrice1.coloane; z++)  // parcurgerea elementelor pentru a putea realiza dot product-ul
           {
-              int k = 0;
-              for(int z = 0; z < matrice1.coloane; z++)  // parcurgerea elementelor pentru a putea realiza dot product-ul
+              for(int j = 0;j < matrice2.coloane; j++)  // parcurgerea coloanelor
               {
-                  rezultat.valori[i][j] += matrice1.valori[i][k] * matrice2.valori[k][j];  // realizeaza dot product-ul
+                  rezultat.valori[i][j] += matrice1.valori[i][z] * matrice2.valori[z][j];  // realizeaza dot product-ul
                   k ++ ;
               }
           }
+
       }
+
+
       return rezultat;  // returneaza produsul dintre cele doua matrice
   }
   else
   {
-      cout << " > Nu se poate realiza produsul intre cele doua matrice deoarece " << matrice1.coloane << " != " << matrice2.linii << ". \n";
+      std::cout << " > Nu se poate realiza produsul intre cele doua matrice deoarece " << matrice1.coloane << " != " << matrice2.linii << ". \n";
       throw int(4);
   }
 
 
 }
-
 ```
 
 </p>
@@ -798,13 +799,26 @@ ostream& operator<<(ostream &out, int f_vector[])
 
 ```c++
 
-ReteaNeuronala model;  // declararea rețelei neuronale
-model.input = input;  // atribuirea input-urilor ce urmează să fie antrenate
-model.output = output;  // atribuirea output-urilor corespunzătoare input-urilor
-model.rata_de_invatare = 0.2;  // rata de învățare poate lua orice valoare în (0, 1) , inițial este setată la 0.8
-model.structura = "[2, 2, 1]";  // structura rețelei neuronale, în cazul nostru avem 2 neuroni pentru input-uri, 2 pentru primul hidden layer și unul pentru output
-model.antreneaza(5000);  // numărul de ”antrenamente” ale structurii
-model.verificare();  // verificarea input-urilor după training
+/// Acesta este constructorul retelei. Are 4 parametri : 
+/// - input-ul : reprezinta vectorul de input-uri.
+/// - output-ul : reprezinta vectorul de output-uri.
+/// - structura : structura specifica retelei neuronale.
+/// - rata de invatare : POATE FI OMISA (default : 0.8)
+ReteaNeuronala model(input, output, "[2, 2, 1]", 0.8);
+
+/// Aceasta este functia de antrenare specifica retelei neuronale. Are 2 parametri : 
+/// - numarul de iteratii : de cate ori se va antrena programul.
+/// - GUI - acest parametru este de tip bool si reprezinta interfata grafica a structurii. 
+model.antreneaza(2000, false);
+
+/// Aceasta este functia de salvare. Are un singur parametru :
+/// - numele fisierului : este un string ce reprezinta numele fisierului. Fisierul va fi salvat cu extensia odin.
+model.salvare("model");
+
+/// Aceasta este functia de verificare. Are 2 parametri:
+/// - numarul de zecimale : acest numar indica cate cifre sunt dupa virgula in momentul verificarii retelei neuronale.
+/// - GUI : acest parametru este de tip bool si reprezinta interfata grafica a structurii. 
+model.verificare(6, false);
 
 ```
 
@@ -824,8 +838,32 @@ model.verificare();  // verificarea input-urilor după training
    
 ```c++
 // Aceasta functie este extrem de importanta in aceasta biblioteca deoarece antreneaza sinapsele neuronilor in vederea unor rezultate cat mai bune.
-void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numarul de iteratii
+void antreneaza(int iteratii, bool GUI = false)  // primeste un singur parametru, ci anume, numarul de iteratii
 {
+  string structura_nou = structura;
+  if(GUI)
+  {
+      structura_nou.erase( remove( structura_nou.begin(), structura_nou.end(), ' ' ), structura_nou.end()); // sterge spatiile din string
+      system("start GUI.exe"); // deschide GUI-ul si porneste serverul
+
+      system("cls");
+      int i = 10;
+      while(i > 0)
+      {
+          if(i > 1 && i < 20)
+              std::cout << "Procesul de antrenare va incepe in " << i << " secunde.";
+          else if(i == 1)
+              std::cout << "Procesul de antrenare va incepe intr-o secunda.";
+
+          i--;
+          sleep(1);
+          system("cls");
+      }
+      std::cout << endl;
+
+
+  }
+
   int n = structura.length(); // retine in variabila n lungimea structurii
   char s[n + 1]; // declararea unui tablou de char in care o sa fie structura
   strcpy(s, structura.c_str());  // copiaza structura in vectorul de char (pentru a putea utiliza functiile specifice vectorului de char, ci nu string-ului.
@@ -835,7 +873,7 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
   int structura_int[1000]; // aici este un vector de int, care va retine fiecare numar de neuroni din fiecare hidden layer
   while(p != NULL)
   {
-      structura_int[index] = stoi(p);  // converteste pointerul in int si il retine in vectorul specficic
+      structura_int[index] = atoi(p);  // converteste pointerul in int si il retine in vectorul specficic
       p = strtok(NULL, ", [ ]");  // pointeaza la urmatorul string
       index++;  // incrementeaza pozitia vectorului
   }
@@ -853,7 +891,9 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
   }
 
 
+
   vector<Matrice> hidden_layers;  // declararea unui vector de hidden layers
+
   for(int z = 0; z < iteratii; z++)  // parcurgem numarul de iteratii transmise ca parametru
   {
 
@@ -868,14 +908,14 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
 
           hidden_layers[0] = hidden_layers[0] + biases[0];  // adaugarea bias-ului in primul hidden layer
 
-          hidden_layers[0] = hidden_layers[0].sigmoid_matrice();  // aplicarea functiei sigmoidale pentru primul hidden layer
+          hidden_layers[0].sigmoid_matrice(hidden_layers[0]);  // aplicarea functiei sigmoidale pentru primul hidden layer
 
 
           for(int j = 1; j <= index - 2; j++)  // parcurgerea urmatoarelor layere.
           {
               hidden_layers.push_back(weights[j] * hidden_layers[j - 1]);  // adauga in vector rezultatul (calculeaza produsul in functie de sinapsele curente si hidden layer-ul anterior)
               hidden_layers[j] = biases[j] + hidden_layers[j]; // adauga bias-ul hidden layer-ului
-              hidden_layers[j] = hidden_layers[j].sigmoid_matrice();  // aplica functia sigmoidala hidden layer-ului de pe pozitia j
+              hidden_layers[j].sigmoid_matrice(hidden_layers[j]);  // aplica functia sigmoidala hidden layer-ului de pe pozitia j
 
           }
 
@@ -918,7 +958,7 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
           for(int j = index - 2 ; j >= 0; j -- )  // parcurgem vectorii
           {
               hidden_layers_derivate[j] = hidden_layers[j];  // retinem hidden layerul de pe pozitia j in noul vector
-              hidden_layers_derivate[j] = hidden_layers_derivate[j].d_sigmoid_matrice();  // aplicam derivata functiei sigmoidale hidden layer-ului
+              hidden_layers_derivate[j].d_sigmoid_matrice(hidden_layers_derivate[j]);  // aplicam derivata functiei sigmoidale hidden layer-ului
 
               gradienturi[j] = erori_hidden_layers[j] % hidden_layers_derivate[j];  // calculam gradientul in functie de eroare si derivata (inmultim matricele element cu element)
               gradienturi[j] = rata_de_invatare * gradienturi[j];  // aplicam rata de invatare
@@ -947,15 +987,30 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
               weights[j] = delta_weights[j] + weights[j];
           }
 
+          // daca GUI-ul este true va trimite datele server-ului pentru a le putea prelucra
+          if(GUI)
+              conectare_server(z, weights, structura_nou, index, hidden_layers);
+
+
       }
-      cout << endl;
+
+      cout << "\n";
       cout << z << " / " << iteratii;
-      cout << endl;
+      cout << "\n";
   }
 
-  cout << endl << endl;
+  cout << "\n\n";
+
+  // daca a ajuns la final si GUI-ul este true va inchide serverul.
+  if(GUI)
+  {
+      SOCKET out = conectare_server(0, weights, structura_nou, 0, hidden_layers);
+      close(out);
+      system("taskkill /F /T /IM GUI.exe");
+  }
 
 }
+
 
 ```
 
@@ -973,8 +1028,29 @@ void antreneaza(int iteratii)  // primeste un singur parametru, ci anume, numaru
 ```c++
 
 // Aceasta functie este asemanatoare cu cea de training, doar ca nu antreneaza nimic, ci doar genereaza valorile in functie de sinapsele antrenate pentru input-urile introduse
-void verificare()
+void verificare(int zecimale = 6, bool GUI = false)
 {
+  string structura_nou = structura;
+  if(GUI)
+  {
+      structura_nou.erase( remove( structura_nou.begin(), structura_nou.end(), ' ' ), structura_nou.end()); // sterge spatiile din string
+      system("start GUI.exe"); // deschide GUI-ul si porneste serverul
+      system("cls");
+      int i = 10;
+      while(i > 0)
+      {
+          if(i > 1 && i < 20)
+              std::cout << "Procesul de verificare va incepe in " << i << " secunde.";
+          else if(i == 1)
+              std::cout << "Procesul de verificare va incepe intr-o secunda.";
+
+          i--;
+          sleep(1);
+          system("cls");
+      }
+      std::cout << endl;
+  }
+
   vector<Matrice> hidden_layers;
   int n = structura.length();
   char s[n + 1];
@@ -987,7 +1063,7 @@ void verificare()
   int structura_int[1000];
   while(p != NULL)
   {
-      structura_int[index] = stoi(p);
+      structura_int[index] = atoi(p);
       p = strtok(NULL, ", [ ]");
       index++;
   }
@@ -998,27 +1074,79 @@ void verificare()
       hidden_layers.push_back(Matrice(1, 1, "valoare", 0));
   }
 
-  for(int i = 0 ; i < input.size(); i++)
+  if(GUI)
   {
-      hidden_layers[0] = weights[0] * input[i];
-      hidden_layers[0] = hidden_layers[0] + biases[0];
-      hidden_layers[0] = hidden_layers[0].sigmoid_matrice();
-
-
-      for(int j = 1; j <= index - 2; j++)
+      bool ok = true;
+      HANDLE handle = CreateThread(NULL, 0, thread2, NULL, 0, NULL);  // incepe cel de-al doilea thread pentru a putea scrie comenzi in loop.
+      while(thread2_start)  // cat timp thread-ul este pornit...
       {
-          hidden_layers[j] = weights[j] * hidden_layers[j - 1];
-          hidden_layers[j] = hidden_layers[j] + biases[j];
-          hidden_layers[j] = hidden_layers[j].sigmoid_matrice();
+
+          for(int i = 0 ; i < input.size(); i++)
+          {
+              hidden_layers[0] = weights[0] * input[i];
+              hidden_layers[0] = hidden_layers[0] + biases[0];
+              hidden_layers[0].sigmoid_matrice(hidden_layers[0]);
+
+
+              for(int j = 1; j <= index - 2; j++)
+              {
+                  hidden_layers[j] = weights[j] * hidden_layers[j - 1];
+                  hidden_layers[j] = hidden_layers[j] + biases[j];
+                  hidden_layers[j].sigmoid_matrice(hidden_layers[j]);
+
+              }
+
+              // daca GUI-ul este true atunci se conecteaza la server si trimite datele
+              if(GUI)
+                  conectare_server(i, weights, structura_nou, index, hidden_layers);
+
+              if(ok)
+              {
+                  cout << std::fixed << std::setprecision(zecimale) << (hidden_layers[index-2]) << "\n";
+
+                  if(i == input.size() - 1)
+                      std::cout << "\n > Pentru a inchide vizualizarea scrie 'stop' \n\n";
+              }
+
+          }
+          ok = false;
 
       }
-
-      cout << (hidden_layers[index-2]);
-      cout << endl;
-
   }
-}
+  else
+  {
+      for(int i = 0 ; i < input.size(); i++)
+      {
+          hidden_layers[0] = weights[0] * input[i];
+          hidden_layers[0] = hidden_layers[0] + biases[0];
+          hidden_layers[0].sigmoid_matrice(hidden_layers[0]);
 
+
+          for(int j = 1; j <= index - 2; j++)
+          {
+              hidden_layers[j] = weights[j] * hidden_layers[j - 1];
+              hidden_layers[j] = hidden_layers[j] + biases[j];
+              hidden_layers[j].sigmoid_matrice(hidden_layers[j]);
+
+          }
+
+          if(GUI)
+              conectare_server(i, weights, structura_nou, index, hidden_layers);
+
+          cout << std::fixed << std::setprecision(zecimale) << (hidden_layers[index-2]) << "\n";
+
+      }
+  }
+
+  // daca a ajuns la final si GUI-ul este true va inchide serverul.
+  if(GUI)
+  {
+      SOCKET out = conectare_server(0, weights, structura_nou, 0, hidden_layers);
+      close(out);
+      system("taskkill /F /T /IM GUI.exe");
+  }
+
+}
 
 ```
 
