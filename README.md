@@ -9,6 +9,8 @@
 Pentru a inițializa ODIN va trebui să descărcați fișierele necesare funcționării acesteia, ci anume : fișierul Lib care conține : matrice.hpp, odin.hpp, client.hpp și GUI.exe. 
 Apoi, în fișierul .cpp, includerea bibliotecii poate fi realizată folosind comanda #include "Lib/odin.hpp"
 
+! În cazul în care întampinați o eroare legată de socket : (CodeBlocks) : Settings -> Compiler -> Linker Settings -> Add -> ws2_32 
+
 # UN SCURT EXEMPLU AL UNUI PROGRAM ODIN
 ---
 Problema XOR
