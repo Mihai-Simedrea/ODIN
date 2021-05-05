@@ -78,7 +78,7 @@ public:
                     std::cout << "Procesul de antrenare va incepe intr-o secunda.";
 
                 i--;
-                sleep(1);
+                Sleep(1000);
                 system("cls");
             }
             std::cout << '\n';
@@ -251,7 +251,7 @@ public:
                     std::cout << "Procesul de verificare va incepe intr-o secunda.";
 
                 i--;
-                sleep(1);
+                Sleep(1000);
                 system("cls");
             }
             std::cout << '\n';
