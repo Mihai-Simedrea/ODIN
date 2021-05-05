@@ -227,7 +227,6 @@ public:
         if(GUI)
         {
             SOCKET out = conectare_server(0, weights, structura_nou, 0, hidden_layers);
-            close(out);
             system("taskkill /F /T /IM GUI.exe");
         }
 
@@ -348,7 +347,6 @@ public:
         if(GUI)
         {
             SOCKET out = conectare_server(0, weights, structura_nou, 0, hidden_layers);
-            close(out);
             system("taskkill /F /T /IM GUI.exe");
         }
 
