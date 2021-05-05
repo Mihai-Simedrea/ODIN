@@ -28,9 +28,6 @@ SOCKET conectare_server(int iteratii, vector<Matrice> weights, string structura,
 
     SOCKET out = socket(AF_INET, SOCK_DGRAM, 0);
 
-    if(index == 0)
-        close(out);
-
     string valoriMatrice = "";
     valoriMatrice += structura;
     valoriMatrice += "{";
@@ -70,7 +67,6 @@ SOCKET conectare_server(int iteratii, vector<Matrice> weights, string structura,
         {
             int sendOk = sendto(out, "end", 1, 0, (sockaddr*)&server, sizeof(server));
             return out;
-            close(out);
         }
         else
             int sendOk = sendto(out, valoriMatrice.c_str(), valoriMatrice.size() + 1, 0, (sockaddr*)&server, sizeof(server));
