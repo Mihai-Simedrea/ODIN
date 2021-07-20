@@ -11,13 +11,13 @@ Pentru a inițializa ODIN va trebui să descărcați fișierele necesare funcți
  - odin.hpp 
  - client.hpp 
  - input_methods.hpp
- - neural_gui.hpp
+ - neural_gui.hpp <br>
 Apoi, în fișierul .cpp, includerea bibliotecii poate fi realizată folosind comanda #include "Lib/odin.hpp"
 
 În același timp, această bibliotecă conține 3 programe externe specifice lucrului cu neuroni : 
  -  GUI.exe (permite vizualizarea structurilor neurornale)
  -  DATAPRINT.exe (permite vizualizarea unei matrice)
- -  DRAW.exe (oferă user-ului oportunitatea de a desena o imagine pe un grid, apoi posibilitatea de convertire a acesteia într-o matrice)
+ -  DRAW.exe (oferă user-ului oportunitatea de a desena o imagine pe un grid, apoi posibilitatea de convertire a acesteia într-o matrice) <br>
 
 ! În cazul în care întampinați o eroare legată de socket : (CodeBlocks) : Settings -> Compiler -> Linker Settings -> Add -> ws2_32 
 
