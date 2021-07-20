@@ -635,7 +635,7 @@ double d_sigmoid(double x)
    
    > Parametri : <br>
    <p>
-     <b>Matrix</b> : Matricea căreia i se va aplica funcția sigmoidală (tip : Matrix) <br>
+     <b>Matrix</b> : Matricea căreia i se va aplica derivata funcției sigmoidale (tip : Matrix) <br>
    </p>
    </br>
 
@@ -670,26 +670,26 @@ void d_sigmoid_Matrix(Matrix &Matrix)
 > Parametri : <br>
 <p>
 <b>out : </b> permite folosirea operatorului "<<", urmat de o matrice <br>
-<b>matrice : </b> matrice ce urmează să fie afișată (tip : Matrice) <br>
+<b>matrix : </b> matrice ce urmează să fie afișată (tip : Matrix) <br>
 </p>
 
 > Returnează : "afișarea"
 
 ```c++
 
-// Acesta este operatorul de afisare, adica putem folosi cout << matrice;
-ostream& operator<<(ostream &out, Matrice matrice)
+// We can use cout << MATRIX ;
+std::ostream& operator<<(std::ostream &out, Matrix matrix)
 {
 
-  for(int i = 0;i < matrice.linii;i++) // parcurge numarul de linii
-  {
-      for(int j = 0;j< matrice.coloane;j++) // parcurge numarul de coloane
-      {
-          out << matrice.valori[i][j] << " "; // afiseaza fiecare element
-      }
-      out << endl;
-  }
-  return out;  // returneaza "afisarea"
+    for(int i = 0;i < matrix.rows;i++) // parcurge numarul de rows
+    {
+        for(int j = 0;j< matrix.columns;j++) // parcurge numarul de columns
+        {
+            out << matrix.values[i][j] << " "; // afiseaza fiecare element
+        }
+        out << "\n";
+    }
+    return out;  // returneaza "afisarea"
 
 }
 
@@ -705,32 +705,32 @@ ostream& operator<<(ostream &out, Matrice matrice)
 
 > Parametri : <br>
 <p>
-<b>matrice1 : </b> prima matrice (tip : Matrice) <br>
-<b>matrice2 : </b> a doua matrice (tip : Matrice) <br>
+<b>matrix1 : </b> prima matrice (tip : Matrix) <br>
+<b>matrix2 : </b> a doua matrice (tip : Matrix) <br>
 </p>
 
 > Returnează : suma dintre cele două matrice
 
 ```c++
 
-// Acesta este operatorul de adunare, face suma intre doua matrice (matrice1 + matrice2)
-Matrice operator+(Matrice matrice1, Matrice matrice2)
+// Adding operator : (Matrix1 + Matrix2)
+Matrix operator+(Matrix Matrix1, Matrix Matrix2)
 {
-  Matrice rezultat(matrice1.linii, matrice1.coloane, "valoare", 0);  // declararea unei matrice care va stoca noile informatii din adunarea celor doua matrice
+    Matrix result(Matrix1.rows, Matrix1.columns, "value", 0);
 
-  if(!(matrice1.coloane == matrice2.coloane && matrice1.linii == matrice2.linii))  // daca liniile/coloanele primei matrice nu sunt egale cu liniile/coloanele celei de a doua matrice nu se realizeaza operatiunea
-  {
-      cout << " > Nu se poate realiza suma intre cele doua matrice deoarece nu au aceeasi dimensiune." << endl;
-      throw int(2);
-  }
-  else  // altfel, are loc adunarea
-  {
-      for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
-          for(int j = 0;j < matrice1.coloane; j++) // parcurgerea coloanelor
-              rezultat.valori[i][j] = matrice1.valori[i][j] + matrice2.valori[i][j];  // retine suma elementelor de pe pozitia i si j in noua matrice
+    if(!(Matrix1.columns == Matrix2.columns && Matrix1.rows == Matrix2.rows))
+    {
+        std::cout << " > The sum between the two matrix cannot be made because their dimensions do not match. \n";
+        throw int(2);
+    }
+    else
+    {
+        for(int i = 0; i < Matrix1.rows; i++)
+            for(int j = 0;j < Matrix1.columns; j++)
+                result.values[i][j] = Matrix1.values[i][j] + Matrix2.values[i][j];  // calculate the sum and store it into a new matrix
 
-      return rezultat;  // returneaza rezultatul
-  }
+        return result;
+    }
 }
 
 
@@ -745,31 +745,31 @@ Matrice operator+(Matrice matrice1, Matrice matrice2)
 
 > Parametri : <br>
 <p>
-<b>matrice1 : </b> prima matrice (tip : Matrice) <br>
-<b>matrice2 : </b> a doua matrice (tip : Matrice) <br>
+<b>matrix1 : </b> prima matrice (tip : Matrix) <br>
+<b>matrix2 : </b> a doua matrice (tip : Matrix) <br>
 </p>
 
 > Returnează : diferența dintre cele două matrice
 
 ```c++
 
-// Acesta este operatorul de scadere, face diferenta intre doua matrice (matrice1 + matrice2)
-Matrice operator-(Matrice matrice1, Matrice matrice2)
+// Subtracting operator (Matrix1 - Matrix2)
+Matrix operator-(Matrix Matrix1, Matrix Matrix2)
 {
-  Matrice rezultat(matrice1.linii, matrice1.coloane, "valoare", 0); // declararea unei matrice care va stoca noile informatii din scaderea celor doua matrice
-  if(!(matrice1.coloane == matrice2.coloane && matrice1.linii == matrice2.linii)) // daca liniile/coloanele primei matrice nu sunt egale cu liniile/coloanele celei de a doua matrice nu se realizeaza operatiunea
-  {
-      cout << " > Nu se poate realiza diferenta intre cele doua matrice deoarece nu au aceeasi dimensiune." << endl;
-      throw int(3);
-  }
+    Matrix result(Matrix1.rows, Matrix1.columns, "value", 0);
+    if(!(Matrix1.columns == Matrix2.columns && Matrix1.rows == Matrix2.rows))
+    {
+        std::cout << " > The difference between the two matrix cannot be made because their dimensions do not match. \n";
+        throw int(3);
+    }
 
-  else // altfel, are loc scaderea
-  {
-      for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
-          for(int j = 0;j < matrice1.coloane; j++)  // parcurgerea coloanelor
-              rezultat.valori[i][j] = matrice1.valori[i][j] - matrice2.valori[i][j];  // retine suma elementelor de pe pozitia i si j in noua matrice
-      return rezultat;  // returneaza rezultatul
-  }
+    else
+    {
+        for(int i = 0; i < Matrix1.rows; i++)
+            for(int j = 0;j < Matrix1.columns; j++)
+                result.values[i][j] = Matrix1.values[i][j] - Matrix2.values[i][j];  // calculate the difference and store it into a new matrix
+        return result;
+    }
 }
 
 
@@ -785,25 +785,24 @@ Matrice operator-(Matrice matrice1, Matrice matrice2)
 
 > Parametri : <br>
 <p>
-<b>valoare_scalar : </b> valoarea cu care vom înmulți fiecare element din matrice (tip : double) <br>
-<b>matrice : </b> matrice căruia i se va aplica scalarul (tip : Matrice) <br>
+<b>value_scalar : </b> valoarea cu care vom înmulți fiecare element din matrice (tip : double) <br>
+<b>matrix : </b> matrice căruia i se va aplica scalarul (tip : Matrix) <br>
 </p>
 
 > Returnează : matricea înmulțită cu valoarea scalarului
 
 ```c++
 
-// Acesta este operatorul de inmultire cu scalar, inmulteste fiecare element din matrice cu un numar de tip double
-Matrice operator*(double valoare_scalar, Matrice matrice)
+// Scalar operator (value * Matrix)
+Matrix operator*(double value_scalar, Matrix matrix)
 {
-  Matrice rezultat(matrice.linii, matrice.coloane, "valoare", 0);  // declararea unei matrice care va stoca noile informatii din inmultirea matricei cu scalarul
-  for(int i = 0; i < matrice.linii; i++)  // parcurgerea liniilor
-      for(int j = 0;j < matrice.coloane; j++)  // parcurgerea coloanelor
-          rezultat.valori[i][j] = valoare_scalar * matrice.valori[i][j];  // retine produsul dintre scalar si elementul matricei transmise in noua matrice
-  return rezultat;  // returneaza matricea
+    Matrix result(matrix.rows, matrix.columns, "value", 0);
+    for(int i = 0; i < matrix.rows; i++)
+        for(int j = 0;j < matrix.columns; j++)
+            result.values[i][j] = value_scalar * matrix.values[i][j];  // calculate the scalar product and store it into a new matrix
+    return result;
 
 }
-
 ```
 
 </p>
@@ -815,52 +814,53 @@ Matrice operator*(double valoare_scalar, Matrice matrice)
 
 > Parametri : <br>
 <p>
-<b>matrice1 : </b> prima matrice (tip : Matrice) <br>
-<b>matrice2 : </b> a doua matrice (tip : Matrice) <br>
+<b>Matrix1 : </b> prima matrice (tip : Matrix) <br>
+<b>Matrix2 : </b> a doua matrice (tip : Matrix) <br>
 </p>
 
 > Returnează : produsul dintre cele două matrice
 
 ```c++
-// Aceasta este operatorul de inmultirea a doua matrice (matrice1 * matrice2) - dot product
-Matrice operator*(Matrice matrice1, Matrice matrice2)
+// Dot product (Matrix1 * Matrix2)
+Matrix operator*(Matrix Matrix1, Matrix Matrix2)
 {
-  Matrice rezultat(matrice1.linii, matrice2.coloane, "valoare", 0); // declararea unei matrice care va stoca noile informatii din inmultirea celor doua matrice
+    Matrix result(Matrix1.rows, Matrix2.columns, "value", 0);
 
-  bool ok = false;
+    bool ok = false;
 
-  if(matrice1.coloane == matrice2.linii)  // daca numarul de coloane a primei matrice e egal cu cel de linii a celei de a doua matrice se poate realiza inmultirea
-      ok = true;
-
-
-  if (ok)
-  {
-
-      for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
-      {
-          int k = 0;
-          for(int z = 0; z < matrice1.coloane; z++)  // parcurgerea elementelor pentru a putea realiza dot product-ul
-          {
-              for(int j = 0;j < matrice2.coloane; j++)  // parcurgerea coloanelor
-              {
-                  rezultat.valori[i][j] += matrice1.valori[i][z] * matrice2.valori[z][j];  // realizeaza dot product-ul
-                  k ++ ;
-              }
-          }
-
-      }
+    if(Matrix1.columns == Matrix2.rows)
+        ok = true;
 
 
-      return rezultat;  // returneaza produsul dintre cele doua matrice
-  }
-  else
-  {
-      std::cout << " > Nu se poate realiza produsul intre cele doua matrice deoarece " << matrice1.coloane << " != " << matrice2.linii << ". \n";
-      throw int(4);
-  }
+    if (ok)
+    {
+
+        for(int i = 0; i < Matrix1.rows; i++)
+        {
+            int k = 0;
+            for(int z = 0; z < Matrix1.columns; z++)
+            {
+                for(int j = 0;j < Matrix2.columns; j++)
+                {
+                    result.values[i][j] += Matrix1.values[i][z] * Matrix2.values[z][j];  // calculate the dot product
+                    k ++ ;
+                }
+            }
+
+        }
+
+
+        return result;
+    }
+    else
+    {
+        std::cout << " > The product between the two matrix cannot be made because their dimensions do not match " << Matrix1.columns << " != " << Matrix2.rows << ". \n";
+        throw int(4);
+    }
 
 
 }
+
 ```
 
 </p>
@@ -874,42 +874,41 @@ Matrice operator*(Matrice matrice1, Matrice matrice2)
 
 > Parametri : <br>
 <p>
-<b>matrice1 : </b> prima matrice (tip : Matrice) <br>
-<b>matrice2 : </b> a doua matrice (tip : Matrice) <br>
+<b>Matrix1 : </b> prima matrice (tip : Matrix) <br>
+<b>Matrix2 : </b> a doua matrice (tip : Matrix) <br>
 </p>
 
 > Returnează : produsul dintre cele două matrice (înmulțirea are loc element cu element)
 
 ```c++
 
-// Acesta este operatorul de inmutire a doua matrice (matrice1 % matrice2), imultirea are loc element cu element, este TOTAL diferita fata de (matrice1 * matrice2)
-Matrice operator%(Matrice matrice1, Matrice matrice2)
+// Cross product (Matrix1 % Matrix2)
+Matrix operator%(Matrix Matrix1, Matrix Matrix2)
 {
-  Matrice rezultat(matrice1.linii, matrice2.coloane, "valoare", 0);  // declararea unei matrice care va stoca noile informatii din inmultirea celor doua matrice
-  bool ok = false;
+    Matrix result(Matrix1.rows, Matrix2.columns, "value", 0);
+    bool ok = false;
 
-  if(matrice1.coloane == matrice2.coloane && matrice1.linii == matrice2.linii)  // daca numarul de coloane a primei matrice e egal cu cel de linii a celei de a doua matrice se poate realiza inmultirea
-      ok = true;
+    if(Matrix1.columns == Matrix2.columns && Matrix1.rows == Matrix2.rows)
+        ok = true;
 
 
-  if (ok)
-  {
-      for(int i = 0; i < matrice1.linii; i++)  // parcurgerea liniilor
-      {
-          for(int j = 0;j < matrice2.coloane; j++) // parcurgerea coloanelor
-          {
-              rezultat.valori[i][j] = matrice1.valori[i][j] * matrice2.valori[i][j];  // inmulteste element cu element valorile dintre cele doua matrice si le stocheaza in noua matrice
-          }
-      }
-      return rezultat;  // returneaza produsul dintre cele doua matrice
-  }
-  else
-  {
-      cout << " > Nu se poate realiza produsul intre cele doua matrice deoarece nu au aceeasi dimensiune." << endl;
-      throw int(5);
-  }
+    if (ok)
+    {
+        for(int i = 0; i < Matrix1.rows; i++)
+        {
+            for(int j = 0;j < Matrix2.columns; j++)
+            {
+                result.values[i][j] = Matrix1.values[i][j] * Matrix2.values[i][j];  // calculate cross product
+            }
+        }
+        return result;
+    }
+    else
+    {
+        std::cout << " > The product between the two matrix cannot be made because their dimensions do not match. \n";
+        throw int(5);
+    }
 }
-
 ```
 
 </p>
@@ -926,11 +925,11 @@ Matrice operator%(Matrice matrice1, Matrice matrice2)
 
 ```c++
 
-// Acesta este operatorul pentru afisarea formei matricei
-ostream& operator<<(ostream &out, int f_vector[])
+// Display the shape of a matrix
+std::ostream& operator<<(std::ostream &out, int shape_array[])
 {
-  out << "(" << f_vector[0] << ", " << f_vector[1] << ")";
-  return out;
+    out << "(" << shape_array[0] << ", " << shape_array[1] << ")";
+    return out;
 }
 
 ```
