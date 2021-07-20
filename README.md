@@ -6,8 +6,18 @@
 
 # CUM SE INSTALEAZĂ ODIN?
 ---
-Pentru a inițializa ODIN va trebui să descărcați fișierele necesare funcționării acesteia, ci anume : fișierul Lib care conține : matrice.hpp, odin.hpp, client.hpp și GUI.exe. 
+Pentru a inițializa ODIN va trebui să descărcați fișierele necesare funcționării acesteia, ci anume : fișierul Lib care conține : 
+ - matrice.hpp 
+ - odin.hpp 
+ - client.hpp 
+ - input_methods.hpp
+ - neural_gui.hpp
 Apoi, în fișierul .cpp, includerea bibliotecii poate fi realizată folosind comanda #include "Lib/odin.hpp"
+
+În același timp, această bibliotecă conține 3 programe externe specifice lucrului cu neuroni : 
+ -  GUI.exe (permite vizualizarea structurilor neurornale)
+ -  DATAPRINT.exe (permite vizualizarea unei matrice)
+ -  DRAW.exe (oferă user-ului oportunitatea de a desena o imagine pe un grid, apoi posibilitatea de convertire a acesteia într-o matrice)
 
 ! În cazul în care întampinați o eroare legată de socket : (CodeBlocks) : Settings -> Compiler -> Linker Settings -> Add -> ws2_32 
 
@@ -75,15 +85,15 @@ int main()
 În acest fișier se găsește o clasă cu următoarele metode : 
 
 <details>
-   <summary> 1. Constructorul matricei </summary>
+   <summary> 1.1. Constructorul matricei </summary>
     <p>
        
   > Parametri : <br>
   <p>
-      <b>numar_linii</b> : numărul de linii a matricei (tip : int)<br>
-      <b>numar_coloane</b> : numărul de coloane a matricei (tip : int)<br>
-      <b>tip_matrice</b> : tipul matricei, poate lua doar două valori : "valoare" sau "random", pentru valoare va inițializa matricea cu o anumită valoare, pentru random o va   inițializa cu valori random (tip : string) <br>
-      <b>valoare</b> : acest parametru stabilește valoarea matricei, în cazul tipului de matrice "valoare" sau intervalul (-valoare, valoare), în cazul numerelor random (tip : double)
+      <b>rows_number</b> : numărul de linii a matricei (tip : int)<br>
+      <b>columns_number</b> : numărul de coloane a matricei (tip : int)<br>
+      <b>matrix_type</b> : tipul matricei, poate lua doar două valori : "valoare" sau "random", pentru valoare va inițializa matricea cu o anumită valoare, pentru random o va   inițializa cu valori random (tip : string) <br>
+      <b>value</b> : acest parametru stabilește valoarea matricei, în cazul tipului de matrice "valoare" sau intervalul (-valoare, valoare), în cazul numerelor random (tip : double)
 </p> 
 
   > Returnează : construiește matricea
@@ -91,56 +101,210 @@ int main()
 ---
        
 ```c++
-Matrice (int numar_linii, int numar_coloane, std::string tip_matrice, double valoare)
+// Matrix constructor
+Matrix (int rows_number = 0, int columns_number = 0, std::string matrix_type = "value", double value = 0)
 {
 
+   /* Seed initialization */
 
-  /* Aici are loc initializarea seed-ului folosind biblioteca <random>, in defavoarea implementarii functiei rand(),
-  din cauza previzibilitatii acesteia */
-
-  random_device rd;
-  mt19937 mt(rd());
-  uniform_real_distribution<double> dist(-valoare, valoare);
-
-  //Matrice matrice; // initializarea unei matrice care va reprezenta matricea initializata in fisierul .cpp
-  bool val = false;
-  bool random = false;
+   std::random_device rd;
+   std::mt19937 mt(rd());
+   std::uniform_real_distribution<double> dist(-value, value);
 
 
-  /* Aceste structuri decizionale verifica tipul matricei, transmis ca parametru prin functia principalt */
-  if(tip_matrice == "valoare")
-      val = true;
-  if(tip_matrice == "random")
-      random = true;
+   bool val = false;
+   bool random = false;
 
 
-  for (int h = 0; h < numar_linii; h++)  // parcurgem numarul de linii al matricei
-  {
-      vector<double> temp;  // initializam un vector temporar care va retine valorile de pe linia "h"
-      for (int w = 0; w < numar_coloane; w++)  // parcurgem numarul de coloane
-      {
-          if(val)  // daca tipul matricei este "valoare" adaugam in vectorul temporar valoarea respectiva
-              temp.push_back(valoare);
-          else if(random)  // altfel adaugam un numar random in intervalul cunoscut
-          {
+   // Check the matrix type
+   if(matrix_type == "value")
+       val = true;
+   if(matrix_type == "random")
+       random = true;
 
-              temp.push_back((dist(mt)));
-          }
 
-      }
+   for (int h = 0; h < rows_number; h++)  // iterate through the number of rows
+   {
+       std::vector<double> temp;  // temporary vector
+       for (int w = 0; w < columns_number; w++)  // iterate through the number of columns
+       {
+           if(val)  // if the matrix type is "value" then you will add the value into temporary vector
+               temp.push_back(value);
+           else if(random)  // else you will add a random number from [-value, value]
+               temp.push_back((dist(mt)));
 
-      this->valori.push_back(temp);  // adaugam linia curenta in matrice
 
-  }
+       }
 
-  this->linii = numar_linii;  // preluam numarul de linii al matricei si il atribuim clasei
-  this->coloane = numar_coloane;  // preluam numarul de coloane al matricei si il atribuim clasei
+       this->values.push_back(temp);  // add current row in the matrix
+
+   }
+
+   this->rows = rows_number;  // add the number of rows into matrix class
+   this->columns = columns_number;  // add the number of columns into matrix class
 
 
 
-  this->forma[0] = numar_linii;
-  this->forma[1] = numar_coloane;
+   this->shape[0] = rows_number;  // set the shape (rows)
+   this->shape[1] = columns_number;  // set the shape (columns)
 
+}
+
+
+```
+    
+  </p>
+   
+</details>
+   
+   <details>
+   <summary> 1.2. Constructorul matricei </summary>
+    <p>
+       
+  > Parametri : <br>
+  <p>
+      <b>inputs</b> : input-urile ce vor fi adăugate în matrice (tip : vector<Matrix>)<br>
+      <b>outputs</b> : output-urile ce se vor genera pe baza input-urilor (tip : vector<Matrix>)<br>
+      <b>max_outputs</b> : numărul maxim de output-uri (tip : int) <br>
+      <b>max_images</b> : numărul maxim de imagini ce vor fi adăugate în matrice (tip : long)
+      <b>print_text</b> : dacă să afișeze numărul imaginii curente (tip : bool)
+</p> 
+
+  > Returnează : construiește matricea
+
+---
+       
+```c++
+// Matrix constructor
+Matrix(std::vector<Matrix> &inputs, std::vector<Matrix> &outputs, int max_outputs, std::string path, long max_images = -1, bool print_text = false)
+{
+   std::cout << "Loading database from : '" << path << "' \n";
+
+   std::string global_path = "";
+   std::string current_folder = "";
+
+   bool ok = false;
+
+
+   // Get the parent folder path of the current path
+   for(int i = path.size(); i>=0; i--)
+   {
+       if(path[i] == '\\')
+           ok = true;
+       else if(!ok)
+           current_folder += path[i];
+       if(ok)
+           global_path += path[i];
+   }
+   reverse(global_path.begin(), global_path.end());  // reverse the string
+   reverse(current_folder.begin(), current_folder.end()); // reverse the string
+
+   global_path[global_path.size()-1] = '\0';
+   current_folder[current_folder.size()-1] = '\0';
+
+   int number_of_file_gp = 0;
+
+   for (const auto &entry : fs::directory_iterator(global_path))
+       number_of_file_gp ++;
+
+   Matrix output(max_outputs, 1, "value", 0);
+
+   int z_current = 1;
+
+   long global_len = 0;
+   if(max_images == -1)
+   {
+       for(const auto & entry : fs::directory_iterator(path))
+           global_len ++ ;
+
+       max_images = global_len;
+   }
+
+   for (const auto & entry : fs::directory_iterator(path))
+   {
+
+       if(z_current < max_images)
+       {
+
+           std::string path_string{entry.path().u8string()}; // convert filestream path to string path
+           cv::Mat img = cv::imread(path_string, cv::IMREAD_COLOR); // read the current image
+
+           uint8_t* pixelPtr = (uint8_t*)img.data;  // get data from image
+           int cn = img.channels();
+           cv::Scalar_<uint8_t> bgrPixel;
+           double grayscale = 0;
+
+           inputs.push_back(Matrix());
+
+
+           output.values[target][0] = 1;
+           outputs.push_back(output);
+
+           // iterate over rows and columns to append values into the input vector
+           for(int i = 0; i < img.rows; i++)
+           {
+               for(int j = 0; j < img.cols; j++)
+               {
+                   bgrPixel.val[0] = pixelPtr[i*img.cols*cn + j*cn + 0]; // B
+                   bgrPixel.val[1] = pixelPtr[i*img.cols*cn + j*cn + 1]; // G
+                   bgrPixel.val[2] = pixelPtr[i*img.cols*cn + j*cn + 2]; // R
+
+                   grayscale = (bgrPixel.val[0] + bgrPixel.val[1] + bgrPixel.val[2]) / 3;
+                   inputs[inputs.size() - 1].add({grayscale / 255});
+               }
+           }
+
+           if(print_text)
+               std::cout << z_current << " / " << max_images << "\n";
+
+
+           inputs[inputs.size() - 1] = inputs[inputs.size() - 1].transpose();
+           z_current ++ ;
+       }
+       else if(z_current == max_images)
+       {
+           std::string path_string{entry.path().u8string()}; // convert filestream path to string path
+           cv::Mat img = cv::imread(path_string, cv::IMREAD_COLOR); // read the current image
+
+           uint8_t* pixelPtr = (uint8_t*)img.data;  // get data from image
+           int cn = img.channels();
+           cv::Scalar_<uint8_t> bgrPixel;
+           double grayscale = 0;
+
+
+           output.values[target][0] = 1;
+           outputs.push_back(output);
+
+
+
+           // iterate over rows and columns to append values into the input vector
+           for(int i = 0; i < img.rows; i++)
+           {
+               for(int j = 0; j < img.cols; j++)
+               {
+                   bgrPixel.val[0] = pixelPtr[i*img.cols*cn + j*cn + 0]; // B
+                   bgrPixel.val[1] = pixelPtr[i*img.cols*cn + j*cn + 1]; // G
+                   bgrPixel.val[2] = pixelPtr[i*img.cols*cn + j*cn + 2]; // R
+
+                   grayscale = (bgrPixel.val[0] + bgrPixel.val[1] + bgrPixel.val[2]) / 3;
+                   this->add({grayscale / 255});
+               }
+           }
+
+           if(print_text)
+               std::cout << z_current << " / " << max_images << "\n";
+
+           *this = this->transpose();
+           z_current ++ ;
+       }
+
+   }
+   if(print_text)
+       std::cout << "\n\n";
+   else
+       std::cout << "";
+
+   target += 1;
 
 }
 
@@ -158,42 +322,36 @@ Matrice (int numar_linii, int numar_coloane, std::string tip_matrice, double val
    
    > Parametri : <br>
   <p>
-   <b>valoare</b> : primește valoarea ce va fi adăugată în matrice (tip : double) <br>
+   <b>value</b> : primește valoarea ce va fi adăugată în matrice (tip : double) <br>
 </p> 
 
   > Returnează : - 
    
 ```c++
 
-void v_adauga(double valoare)  /* unicul parametru al functiei este de tip double,
-reprezentand valoarea ce va fi adaugata in matrice */
+void v_add(double value)
 {
-  Matrice vector_nou(1, this->linii * this->coloane + 1, "valoare", 0);  /* initializarea unei matrice care va stoca informatiile anterioare,
-  dar, in plus, va avea si noua valoare adaugata */
+   Matrix new_array(1, this->rows * this->columns + 1, "value", 0);  // create a new matrix
 
-  /* initializam matricea cu liniile matricei din fisierul .cpp, de asemenea, numarul de coloane se va
-  incrementa cu 1, reprezentand locul pentru valoarea ce va fi adaugata */
+   int index = 0;
 
+   for(int i = 0; i < this->rows; i++)  // iterate through the number of rows
+   {
+       for(int j = 0; j < this->columns; j++)  // iterate through the number of columns
+       {
+           index = i * this->columns + j;  // create a 1D index from the rows and columns of 2D array
+           new_array.values[0][index] = this->values[i][j];  // add the values to the 1D array
+       }
+   }
 
-  int index = 0;  // initializam un index care va fi pozitia in functie de linii si coloane
+   new_array.values[0][this->columns * this->rows ] = value;
 
-  for(int i = 0; i < this->linii; i++)  // parcurgem numarul de linii a matricei
-  {
-      for(int j = 0; j < this->coloane; j++)  // parcurgem numarul de coloane a matricei
-      {
-          index = i * this->coloane + j;  // construim index-ul pe baza liniei si coloanei curente
-          vector_nou.valori[0][index] = this->valori[i][j];  // atribuim pozitiei curente valorile din matricea de pe pozitiile i si j
-      }
-  }
+   this->rows = new_array.rows;  // set the number of rows to the new matrix
+   this->columns = new_array.columns;  // set the number of columns to the new matrix
+   this->values = new_array.values;  // set the values to the new matrix
 
-  vector_nou.valori[0][this->coloane * this->linii ] = valoare;  // aici adaugam valoarea dorita pe ultima pozitie a matricei
-
-  this->linii = vector_nou.linii;  // setam numarul de linii in functie de numarul de linii ale matricei construite in functie
-  this->coloane = vector_nou.coloane;  // setam numarul de coloane in functie de numarul de coloane ale matricei construite in functie
-  this->valori = vector_nou.valori;  // preluam valorile din vector si le setam matricei
-
-  this->forma[0] = this->linii;
-  this->forma[1] = this->coloane;
+   this->shape[0] = this->rows;
+   this->shape[1] = this->columns;
 
 
 }
@@ -208,18 +366,18 @@ reprezentand valoarea ce va fi adaugata in matrice */
    
    > Parametri : <br>
   <p>
-   <b>valoare</b> : primește ca parametru un vector de valori <br>
+   <b>value</b> : primește ca parametru un vector de valori <br>
 </p> 
 
   > Returnează : - 
    
 ```c++
 
-// Functia ce adauga o lista de valori in matrice
-void adauga(vector<double> valoare)
+// This function adds a list of values to a matrix
+void add(std::vector<double> value)
 {
-  for(int i = 0; i < valoare.size(); i++)
-      this->v_adauga(valoare[i]);
+   for(int i = 0; i < value.size(); i++)
+       this->v_add(value[i]);
 }
 ```
 </p>
@@ -234,25 +392,25 @@ void adauga(vector<double> valoare)
   > Returnează : returnează matricea de tip coloana
 
 ```c++
-Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si simplu schimba forma matricei intr-o matrice de tip coloana.
+Matrix flatten()  // this function will convert a 2D array to 1D
 {
-  Matrice vector_nou(1, this->linii * this->coloane, "valoare", 0);  // initializarea unei matrice care va stoca informatiile anterioare
+   Matrix new_array(1, this->rows * this->columns, "value", 0);  // init a 1D matrix
 
-  int index = 0;  // initializam un index care va fi pozitia in functie de linii si coloane
+   int index = 0;
 
-  for(int i = 0; i < this->linii; i++)  // parcurgem numarul de linii ale matricei
-  {
-      for(int j = 0; j < this->coloane; j++)  // parcurgem numarul de coloane ale matricei
-      {
-          index = i * this->coloane + j;  // construim index-ul pe baza liniei si coloanei curente
-          vector_nou.valori[0][index] = this->valori[i][j];  // atribuim noii matrice elementele de pe pozitiile i si j
-      }
-  }
+   for(int i = 0; i < this->rows; i++)  // iterate through the number of rows
+   {
+       for(int j = 0; j < this->columns; j++)  // iterate through the number of columns
+       {
+           index = i * this->columns + j;  // create a 1D index from the rows and columns of 2D array
+           new_array.values[0][index] = this->values[i][j];   // add the values to the 1D array
+       }
+   }
 
-  this->forma[0] = this->linii;
-  this->forma[1] = this->coloane;
+   this->shape[0] = this->rows;
+   this->shape[1] = this->columns;
 
-  return vector_nou;  // returnam noua matrice de tip coloana
+   return new_array;  // return the new matrix
 }
 ```
 
@@ -267,32 +425,31 @@ Matrice vectorizare()  // aceasta functie nu primeste niciun parametru, pur si s
   <p>
      <b>input</b> : vectorul de input-uri a căror poziții urmează să fie randomizate (tip : vector<Matrice>) <br>
      <b>output</b> : vectorul de output-uri a căror poziții urmează să fie randomizate (tip : vector<Matrice>) <br>
-     <b>numar_inputuri</b> : numărul de elemente supuse randomizării (tip : int) <br>
+     <b>input_size</b> : numărul de elemente supuse randomizării (tip : int) <br>
    </p>
 
   > Returnează : - 
       
 ```c++
-/* Functia de randomizare are 3 parametri. Primul este reprezentat de vectorul de input-uri,
-al doilea de vectorul de output-uri, iar al treilea de numarul de elemente care sunt supuse randomizarii */
-void randomizare(vector<Matrice> input, vector<Matrice> output, int numar_inputuri)
+/* This function will suffle every element from a matrix */
+void shuffle(std::vector<Matrix> &input, std::vector<Matrix> &output, int input_size)
 {
 
-  /* Aici are loc initializarea seed-ului folosind biblioteca <random>, in defavoarea implementarii functiei rand(),
-  din cauza previzibilitatii acesteia */
-  random_device rd;
-  mt19937 mt(rd());
-  uniform_real_distribution<double> dist(0, numar_inputuri);
+   /* Seed initialization */
+   std::random_device rd;
+   std::mt19937 mt(rd());
+   std::uniform_real_distribution<double> dist(0, input_size);
 
 
-  for(int i = 0; i < numar_inputuri; i++)  // parcurgem numarul de elemente care vor fi randomizate
-  {
-      int random = dist(mt);  // retinem in variabila random o valoare random in intervalul [0, numar_inputuri]
-      std::swap(input[i], input[random]);  // schimbam valorile de pe pozitia curenta, cu cele de pe pozitia generata random
-      std::swap(output[i], output[random]);  // schimbam valorile de pe pozitia curenta, cu cele de pe pozitia generata random
+   for(int i = 0; i < input_size; i++)  // iterate through the number of inputs
+   {
+       int random = dist(mt);
+       std::swap(input[i], input[random]);  // swap the elements from "i" with the elements from "random"
+       std::swap(output[i], output[random]);  // swap the elements from "i" with the elements from "random"
 
-  }
+   }
 }
+
 
 ```
 
@@ -305,42 +462,43 @@ void randomizare(vector<Matrice> input, vector<Matrice> output, int numar_inputu
    
   > Parametri : <br>
   <p>
-   <b>dimensiune1</b> : numărul de linii ale viitoarei matrice (tip : int) <br> 
-   <b>dimensiune2</b> : numărul de coloane ale viitoarei matrice (tip : int) <br>
+   <b>dim1</b> : numărul de linii ale viitoarei matrice (tip : int) <br> 
+   <b>dim2</b> : numărul de coloane ale viitoarei matrice (tip : int) <br>
 </p> 
 
   > Returnează : returnează matricea 
    
 ```c++
-Matrice sforma(int dimensiune1, int dimensiune2)
+// This function will change the dimensions of a matrix
+Matrix reshape(int dim1, int dim2)
 {
-  if(dimensiune1 * dimensiune2 == this->coloane * this->linii)  // daca produsul dimensiunilor introduse e egal cu cel al matricei se va realiza conversia.
-  {
+   if(dim1 * dim2 == this->columns * this->rows)  // check if dimensions are equal
+   {
 
-      Matrice vector_nou(0,0,"valoare",0), vn(dimensiune1, dimensiune2, "valoare", 0);  // initializarea unui nou vector, in care sunt copiate informatiile matricei
-      vector_nou = this->vectorizare();  // transformarea matricei intr-o matrice de tip coloana
+       Matrix new_array(0,0,"value",0), vn(dim1, dim2, "value", 0);  //init a 1D matrix
+       new_array = this->flatten();  // reshape the matrix from 2D to 1D
 
-      int index = 0;  // initializam un index care va fi pozitia in functie de linii si coloane
-      for(int i = 0;i < dimensiune1; i++)  // parcurgerea liniilor in functie de dimensiunea introdusa
-      {
-          for(int j = 0; j < dimensiune2; j++)  // parcurgerea liniilor in functie de dimensiunea introdusa
-          {
-              vn.valori[i][j] = vector_nou.valori[0][index];  // atribuirea noului vector cu valorile din matricea coloana principala
-              index++;
-          }
-      }
+       int index = 0;
+       for(int i = 0;i < dim1; i++)  // iterate through the first dimension
+       {
+           for(int j = 0; j < dim2; j++)  // iterate through the second dimension
+           {
+               vn.values[i][j] = new_array.values[0][index];  // add the values
+               index++;
+           }
+       }
 
-      this->forma[0] = this->linii;
-      this->forma[1] = this->coloane;
+       this->shape[0] = this->rows;
+       this->shape[1] = this->columns;
 
-      return vn;  // returnam matricea
+       return vn;  // return the new matrix
 
-  }
-  else  // daca dimensiunile nu sunt corespunzatoare operatia nu poate fi realizata
-  {
-      std::cout << " > Dimensiunea matricei nu poate fi schimbata deoarece valorile introduse nu corespund cu numarul de linii si coloane ale matricei introduse. \n";
-      throw int(6);
-  }
+   }
+   else  // if the dimensions are't equal, you can't reshape the matrix
+   {
+       std::cout << " > The dimensions of the matrix cannot be modified because the values that have been introduced do not match the number of rows and columns of the created matrix. \n";
+       throw int(6);
+   }
 
 }
 ```
@@ -357,36 +515,35 @@ Matrice sforma(int dimensiune1, int dimensiune2)
   > Returnează : returnează matricea transpusă
 
 ```c++
-/* Aceasta functie calculeaza transpusa matricei, exemplu : pentru o matrice de (3, 1), o va converti in (1, 3) */
-Matrice transpusa()
+/* This function will transpose a matrix */
+Matrix transpose()
 {
 
-  int linii, coloane;
-  linii = this->linii;
-  coloane = this->coloane;
+   int rows, columns;
+   rows = this->rows;
+   columns = this->columns;
 
-  Matrice vector_nou(0,0,"valoare",0), vn(coloane, linii, "valoare", 0);  // initializarea unui nou vector, in care sunt copiate informatiile matricei
-  vector_nou = this->vectorizare();  // transformarea matricei intr-o matrice de tip coloana
+   Matrix new_array(0,0,"value",0), vn(columns, rows, "value", 0);
+   new_array = this->flatten();
 
-  int index = 0;  // initializam un index care va fi pozitia in functie de linii si coloane
-  for(int i = 0;i < coloane; i++)  // parcurgerea liniilor in functie de dimensiunea introdusa
-  {
-      for(int j = 0; j < linii; j++)  // parcurgerea liniilor in functie de dimensiunea introdusa
-      {
-          vn.valori[i][j] = vector_nou.valori[0][index];  // atribuirea noului vector cu valorile din matricea coloana principala
-          index++;
-      }
-  }
+   int index = 0;
+   for(int i = 0;i < columns; i++)
+   {
+       for(int j = 0; j < rows; j++)
+       {
+           vn.values[i][j] = new_array.values[0][index];
+           index++;
+       }
+   }
 
-  this->forma[0] = this->linii;
-  this->forma[1] = this->coloane;
+   this->shape[0] = this->rows;
+   this->shape[1] = this->columns;
 
-  return vn;  // returnam matricea
+   return vn;
 
 }
 
-
-
+};
 ```
 
 </p>
@@ -404,11 +561,12 @@ Matrice transpusa()
   > Returnează : returnează o valoare după aplicarea funcției sigmoidale 
 
 ```c++
-/* Functia sigmoidala */
+/* Sigmoid function */
 double sigmoid(double x)
 {
-  return 1 / (1 + exp(-x));  // returneaza o valoare dupa aplicarea functiei sigmoidale
+   return 1 / (1 + exp(-x));
 }
+
 ```
 
 </p>
@@ -420,25 +578,26 @@ double sigmoid(double x)
 <p>
    
    
-   > Parametri : - <br> 
+   > Parametri : <br>
+   <p>
+     <b>Matrix</b> : Matricea căreia i se va aplica funcția sigmoidală (tip : Matrix) <br>
+   </p>
 
   > Returnează : returnează matricea
 
 ```c++
-/* Aceasta metoda aplica functia sigmoidala pentru o matrice */
-Matrice sigmoid_matrice()
+/* This function will apply the sigmoid function to every element of a matrix */
+void sigmoid_Matrix(Matrix &Matrix)
 {
-  Matrice matrice(0, 0, "valoare", 0);
-  int coloane = this->coloane;  // retine numarul de coloane
-  int linii = this->linii;  // retine numarul de linii
+   int columns = Matrix.columns;
+   int rows = Matrix.rows;
 
-  matrice = this->vectorizare();  // vectorizeaza matricea
+   Matrix = Matrix.flatten();
 
-  for(int i = 0; i < coloane * linii; i++)  // parcurge toate elementele matricei
-      matrice.valori[0][i] = sigmoid(matrice.valori[0][i]);  // aplica functia sigmoidala pentru fiecare valoare
+   for(int i = 0; i < columns * rows; i++)
+       Matrix.values[0][i] = sigmoid(Matrix.values[0][i]);
 
-  matrice = matrice.forma(linii, coloane);  // schimba forma matricei la cea initiala
-  return matrice;  // returneaza matricea
+   Matrix = Matrix.reshape(rows, columns);
 }
 ```
 
@@ -458,10 +617,10 @@ Matrice sigmoid_matrice()
   > Returnează : returnează o valoare dupa aplicarea funcției sigmoidale 
 
 ```c++
-/* Derivata functiei sigmoidale */
+/* Derived sigmoid function*/
 double d_sigmoid(double x)
 {
-  return x * (1 - x);  /* o sa returneze valoarea dupa derivarea unei valori folosind functia sigmoidala (Valoarea trebuie sa aiba in componenta functia sigmoidala inainte de a fi aplicata derivata!!) */
+   return x * (1 - x);
 }
 
 ```
@@ -474,25 +633,27 @@ double d_sigmoid(double x)
 <summary> 11. Funcția sigmoidală (derivata) aplicată matricei </summary>
 <p>
    
-   > Parametri : - <br>
+   > Parametri : <br>
+   <p>
+     <b>Matrix</b> : Matricea căreia i se va aplica funcția sigmoidală (tip : Matrix) <br>
+   </p>
+   </br>
 
   > Returnează : returnează matricea
 
 ```c++
-// Derivata functiei sigmoidale aplicata matricei
-Matrice d_sigmoid_matrice()
+/* This function will apply the derived sigmoid function to every element of a matrix */
+void d_sigmoid_Matrix(Matrix &Matrix)
 {
-  Matrice matrice(0, 0, "valoare", 0);
-  int coloane = this->coloane;  // retine numarul de coloane
-  int linii = this->linii;  // retine numarul de linii
+   int columns = Matrix.columns;  // retine numarul de columns
+   int rows = Matrix.rows;  // retine numarul de rows
 
-  matrice = this->vectorizare();  // vectorizeaza matricea
+   Matrix = Matrix.flatten();  // vectorizeaza Matrixa
 
-  for(int i = 0; i < coloane * linii; i++)  // parcurge toate elementele matricei
-      matrice.valori[0][i] = d_sigmoid(matrice.valori[0][i]);  // aplica derivata sigmoidalei pentru fiecare valoare din matrice
+   for(int i = 0; i < columns * rows; i++)  // parcurge toate elementele Matrixi
+       Matrix.values[0][i] = d_sigmoid(Matrix.values[0][i]);  // aplica derivata sigmoidalei pentru fiecare value din Matrix
 
-  matrice = matrice.forma(linii, coloane);  // schimba forma matricei la cea initiala
-  return matrice; // returneaza matricea
+   Matrix = Matrix.reshape(rows, columns);  // schimba shape Matrixi la cea initiala
 }
 ```
 
