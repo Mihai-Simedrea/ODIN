@@ -26,19 +26,16 @@ Apoi, în fișierul .cpp, includerea bibliotecii poate fi realizată folosind co
 Problema XOR
 ```c++
 
-/// INCLUDEREA BIBLIOTECILOR
 #include <iostream>
 #include "Lib/odin.hpp"
 
 using namespace std;
-using namespace odin; // ODIN folosește un namespace specific în ceea ce privește utilizarea funcțiilor necesare
+using namespace odin;
 
 int main()
 {
-
-   vector<Matrice> input; // inițializarea unui vector de input-uri pentru a stoca informațiile necesare training-ului.
-   vector<Matrice> output; // inițializarea unui vector de output-uri pentru a stoca informațiile necesare training-ului.
-
+    vector<Matrix> input; // inițializarea unui vector de input-uri pentru a stoca informațiile necesare training-ului.
+    vector<Matrix> output; // inițializarea unui vector de output-uri pentru a stoca informațiile necesare training-ului.
 
 
    /// INPUTURI
@@ -46,34 +43,33 @@ int main()
    /* Aici are loc inițializarea matricelor cu valorile respective programului XOR.
    Adăugăm matricea respectivă în vectorul de input-uri folosind comanda ”push_back()” din biblioteca ”<vector>”. */
 
-   input.push_back(Matrice(2, 1, "valoare", 1));
-   input.push_back(Matrice(2, 1, "valoare", 0));
-   input.push_back(Matrice(1, 1, "valoare", 0));
-   input[2].adauga({1});  /* deoarece input[2] are o singură valoare, va trebui să adăugăm și un 1,
+   input.push_back(Matrix(2, 1, "value", 1));
+   input.push_back(Matrix(2, 1, "value", 0));
+   input.push_back(Matrix(1, 1, "value", 0));
+   input[2].add({1});  /* deoarece input[2] are o singură valoare, va trebui să adăugăm și un 1,
    pentru a avea matricea (0, 1)*/
 
-   input[2] = input[2].sforma(2, 1); /* după această adăugare forma matricei se va schimba într-o matrice de tip coloană.
+   input[2] = input[2].reshape(2, 1); /* după această adăugare forma matricei se va schimba într-o matrice de tip coloană.
    Acest lucru poate fi remediat folosind comanda ”forma()”, care va schimba dimensiunea matricei. */
 
-   input.push_back(Matrice(1, 1, "valoare", 1));
-   input[3].adauga({0});
-   input[3] = input[3].sforma(2, 1);
-
+   input.push_back(Matrix(1, 1, "value", 1));
+   input[3].add({0});
+   input[3] = input[3].reshape(2, 1);
 
    /// OUTPUTURI
 
    /* Aici are loc inițializarea output-urilor, care nu sunt altceva decât 4 valori situate într-o matrice. */
-   output.push_back(Matrice(1, 1, "valoare", 0));
-   output.push_back(Matrice(1, 1, "valoare", 0));
-   output.push_back(Matrice(1, 1, "valoare", 1));
-   output.push_back(Matrice(1, 1, "valoare", 1));
+   output.push_back(Matrix(1, 1, "value", 0));
+   output.push_back(Matrix(1, 1, "value", 0));
+   output.push_back(Matrix(1, 1, "value", 1));
+   output.push_back(Matrix(1, 1, "value", 1));
+
+   NeuralNetwork neuralNet(input, output, "[2, 2, 1]");
+   neuralNet.train(20000); // antrenarea funcției pentru 20000 de iterații.
+   neuralNet.show(); // această funcție afișează output-ul pentru toate valorile din input.
+   neuralNet.save("neuralNet"); // această funcție salvează modelul în fișierul "model.odin".
 
 
-   /// RETEA NEURONALA
-   ReteaNeuronala model(input, output, "[2, 2, 1]");  // declararea rețelei neuronale în ”model”.
-   model.antreneaza(20000);  // antrenarea funcției pentru 20000 de iterații.
-   model.verificare(); // această funcție afișează output-ul pentru toate valorile din input.
-   model.salvare("model"); // această funcție salvează modelul în fișierul "model.odin".
 }
 
 
@@ -659,6 +655,114 @@ void d_sigmoid_Matrix(Matrix &Matrix)
 
 </p>
 </details>  
+ 
+<details>
+<summary> 12. Funcția de afișare a matricei </summary>
+<p>
+   
+   > Parametri : - <br>
+  </br>
+
+  > Returnează : afișează matricea
+
+```c++
+void print()
+{
+    for(int i = 0;i < this->rows;i++) // iterate over rows
+    {
+        for(int j = 0;j< this->columns;j++) // iterate over columns
+        {
+            std::cout << this->values[i][j] << " "; // show every element
+        }
+        std::cout << "\n";
+    }
+}
+```
+
+</p>
+</details> 
+ 
+<details>
+<summary> 13. Funcția de eliminare elemente din matrice </summary>
+<p>
+   
+   > Parametri : - <br>
+   <p>
+     <b>elements</b> : numărul de elemente ce vor fi eliminate (tip : int) <br>
+  </p> 
+  
+ 
+  </br>
+
+  > Returnează : -
+
+```c++
+void pop(int elements = 1)
+{
+    Matrix new_array(1, this->rows * this->columns - elements, "value", 0);  // create a new matrix
+    int index = 0;
+
+    for(int i = 0; i < this->rows; i++)  // iterate through the number of rows
+    {
+        for(int j = 0; j < this->columns; j++)  // iterate through the number of columns
+        {
+            index = i * this->columns + j;  // create a 1D index from the rows and columns of 2D array
+
+            if(index < this->columns * this->rows - elements)
+                new_array.values[0][index] = this->values[i][j];  // add the values to the 1D array
+            else
+                break;
+        }
+    }
+
+
+    this->rows = new_array.rows;  // set the number of rows to the new matrix
+    this->columns = new_array.columns;  // set the number of columns to the new matrix
+    this->values = new_array.values;  // set the values to the new matrix
+
+    this->shape[0] = this->rows;
+    this->shape[1] = this->columns;
+
+
+}
+
+```
+
+</p>
+</details>  
+ 
+<details>
+<summary> 14. Funcția de resetare matrice </summary>
+<p>
+   
+   > Parametri : - <br>
+ 
+  </br>
+
+  > Returnează : -
+
+```c++
+/* This function will replace every element of a matrix with 0 */
+void reset()
+{
+    int rows, columns;
+    rows = this->rows;
+    columns = this->columns;
+
+
+
+    for(int i = 0;i < rows; i++)
+        for(int j = 0; j < columns; j++)
+            this->values[i][j] = 0;
+
+
+}
+```
+
+</p>
+</details>  
+
+
 
 ---
 În acest fișier se mai găsește și un namespace cu următoarele funcții :
@@ -965,12 +1069,12 @@ neuralNet.train(2000, false);
 
 /// Aceasta este functia de salvare. Are un singur parametru :
 /// - numele fisierului : este un string ce reprezinta numele fisierului. Fisierul va fi salvat cu extensia odin.
-model.save("model");
+neuralNet.save("model");
 
 /// Aceasta este functia de verificare. Are 2 parametri:
 /// - numarul de zecimale : acest numar indica cate cifre sunt dupa virgula in momentul verificarii retelei neuronale.
 /// - GUI : acest parametru este de tip bool si reprezinta interfata grafica a structurii. 
-model.show(6, false);
+neuralNet.show(6, false);
 
 ```
 
