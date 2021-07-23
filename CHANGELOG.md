@@ -3,7 +3,7 @@ Toate schimbările majore ale bibliotecii vor fi anunțate aici
  
 
 <details>
-   <summary> [1.0.0] - 21.07.2021 </summary>
+   <summary> [1.0.0] - 24.07.2021 </summary>
  
    ### Added
  
