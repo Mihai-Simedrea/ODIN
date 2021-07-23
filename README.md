@@ -2015,11 +2015,12 @@ while True:
 
 
 ```
+</p>
+</details>  
+ 
+# FUNCȚIILE SPECIFICE INPUT-URILOR (client.hpp)
 ---
  
-# FUNCȚIILE SPECIFICE LUCRULUI CU CITIREA INPUT-URILOR (client.hpp)
----
-
 În acest fișier se găsește următoarea funcție : 
 
 <details>
@@ -2098,4 +2099,302 @@ void load_from_file(std::vector<Matrix> &input, std::string path, int images_cou
 
  
  ```
+ 
+ </p>
+ </details>
+ 
+ <details>
+<summary> 2. Funcția de afișare input (Python) </summary>
+<p>
+
+
+> Parametri : - <br>
+ 
+> Returnează : -
+
+</p>
+ 
+ ```python
+  
+import socket
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+
+
+localIP = "127.0.0.1"
+
+localPort = 54001
+
+UDPServerSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+
+UDPServerSocket.bind((localIP, localPort))
+bufferSize = 65535
+
+
+start = False
+shape = ""
+start2 = False
+clMsg = ""
+
+
+while True:
+
+    bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+
+    message = bytesAddressPair[0]
+
+    address = bytesAddressPair[1]
+
+    clientMsg = message.decode('utf-8')
+
+    if len(clientMsg) != 0:
+        for i in range(0, len(clientMsg)):
+
+            if start:
+                shape += clientMsg[i]
+
+            if start2:
+                clMsg += clientMsg[i]
+
+            if clientMsg[i] == '(':
+                start = True
+            elif clientMsg[i] == ')':
+                start = False
+                start2 = True
+
+
+        shape = shape[:-1]
+
+        shape_array = shape.split(',')
+        arr = np.asarray(shape_array)
+        shape_arr = arr.astype(int)
+
+
+
+        info = clMsg.split(',')
+
+        array = np.asarray(info)
+        y = array.astype(float)
+
+        print(shape_arr[0], shape_arr[1])
+
+        product = int(shape_arr[0]) * int(shape_array[1])
+
+        y = y.reshape(int(math.sqrt(product)), int(math.sqrt(product)))
+
+
+
+        plt.imshow(y, interpolation='nearest')
+        plt.show()
+
+        clMsg = ''
+        product = 0
+        shape = ''
+        shape_array = ''
+        shape_arr = 0
+        start = False
+        start2 = False
+
+
+
+```
+  
+  </p>
+ </details>
+ 
+</p>
+ </details>
+ 
+ <details>
+<summary> 3. Funcția de desenare input (Python) </summary>
+<p>
+
+
+> Parametri : - <br>
+ 
+> Returnează : -
+
+</p>
+  
+```python
+  
+import tkinter as tk
+from PIL import Image, ImageDraw, ImageOps
+import math
+
+
+image1 = Image.new("RGB", (600, 600), (255, 255, 255))
+draw = ImageDraw.Draw(image1)
+
+points = []
+points_pixels = []
+grid_bool = False
+
+
+def distance(x0, y0, x1, y1):
+    return math.sqrt((x1 - x0)**2 + (y1 - y0)**2)
+
+def find_index(array, val):
+    for i in range(0, len(array)):
+        if val == array[i]:
+            return i
+    return -1
+
+def mouse_click(event, canvas):
+    global points, draw
+
+    dist = []
+
+    x = event.x / 600
+    y = event.y / 600
+
+    for i in range(0, len(points)):
+        dist.append(distance(x, y, points[i][0], points[i][1]))
+
+    v1 = min(dist)
+    v1_index = find_index(dist, v1)
+    dist[v1_index] = 2
+
+    v2 = min(dist)
+    v2_index = find_index(dist, v2)
+    dist[v2_index] = 2
+
+    v3 = min(dist)
+    v3_index = find_index(dist, v3)
+    dist[v3_index] = 2
+
+    v4 = min(dist)
+    v4_index = find_index(dist, v4)
+    dist[v4_index] = 2
+
+
+    x0 = points_pixels[v1_index][0]
+    y0 = points_pixels[v1_index][1]
+
+    x1 = points_pixels[v4_index][0]
+    y1 = points_pixels[v4_index][1]
+
+
+    if x0 != x1 and y0 != y1:
+        canvas.create_rectangle(x0, y0, x1, y1, fill = 'black')
+        draw.rectangle((x0, y0, x1, y1), fill = 'black')
+
+
+def print_selection(lb, canvas):
+    global points, image1, draw, grid_bool
+
+
+    ### CANVAS ####
+
+    image1 = Image.new("RGB", (600, 600), (255, 255, 255))
+    draw = ImageDraw.Draw(image1)
+
+    points.clear()
+    points_pixels.clear()
+    canvas.delete("all")
+    line = canvas.create_line(600, 0, 600, 650)
+
+    text = lb.get(tk.ANCHOR)
+    slices = int(text)
+    slice_width = 600 / slices
+
+    ### GENERATE POINT ARRAY ###
+
+    x = 0
+    y = 0
+
+    for i in range(0, slices + 1):
+        for j in range(0, slices + 1):
+
+            points_pixels.append((x, y))
+            points.append((x / 600, y / 600))
+
+            x += slice_width
+
+        x = 0
+        y += slice_width
+
+
+    pos = slice_width
+
+    if grid_bool:
+
+        for i in range(0, slices):
+            canvas.create_line(pos, 0, pos, 650)
+            pos += slice_width
+
+        pos = slice_width
+
+        for i in range(0, slices):
+            canvas.create_line(0, pos, 750, pos)
+            pos += slice_width
+
+
+def SaveCommand(lst, main):
+    global draw, image1
+
+    text = lst.get(tk.ANCHOR)
+    slices = int(text)
+
+    image1 = image1.resize((slices, slices))
+
+    image1 = ImageOps.invert(image1)
+    image1 = image1.convert('1')
+
+    image1.save('pred_image.png', quality = 95)
+
+    main.destroy()
+
+def grid(button):
+    global grid_bool
+    grid_bool = not grid_bool
+
+    if not grid_bool:
+        button['text'] = 'Grid OFF'
+    else:
+        button['text'] = "Grid ON"
+
+
+if __name__ == '__main__':
+    main = tk.Tk()
+    main.geometry("745x600")
+    main.title("GUI - Drawing")
+    main.resizable(False, False)
+
+    sb = tk.Scrollbar(main)
+    sb.pack(side=tk.RIGHT, fill=tk.Y)
+
+    mylist = tk.Listbox(main, yscrollcommand=sb.set)
+
+    for line in range(2, 51):
+        mylist.insert(tk.END, str(line) )
+
+
+
+    sb.config(command=mylist.yview)
+
+
+    canvas = tk.Canvas(main, bg = "white", height = 600, width = 700)
+    line = canvas.create_line(600, 0, 600, 650)
+    canvas.bind("<B1-Motion>", lambda event: mouse_click(event, canvas))
+
+
+    mylist.pack(side=tk.RIGHT)
+    mylist.bind('<Double-1>', lambda lb: print_selection(mylist, canvas))
+
+    saveButton = tk.Button(main, text = "Save", command = lambda: SaveCommand(mylist, main))
+    saveButton.pack(side = tk.BOTTOM)
+
+    gridButton = tk.Button(main, text = 'Grid OFF', command = lambda :grid(gridButton))
+    gridButton.place(x = 640, y = 390)
+
+
+    canvas.pack()
+    main.mainloop()
+
+
+```
+  </p>
+  </details>
 
