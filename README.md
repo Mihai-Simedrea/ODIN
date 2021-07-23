@@ -2019,7 +2019,7 @@ while True:
 </p>
 </details>  
  
-# FUNCȚIILE SPECIFICE INPUT-URILOR (client.hpp)
+# FUNCȚIILE SPECIFICE INPUT-URILOR (inputs_methods.hpp)
 ---
  
 În acest fișier se găsește următoarea funcție : 
@@ -2102,10 +2102,13 @@ void load_from_file(std::vector<Matrix> &input, std::string path, int images_cou
  ```
  
  </p>
- </details>
+</details>  
+ 
+# PROGRAME AUXILIARE PYTHON
+---
  
  <details>
-<summary> 2. Funcția de afișare input (Python) </summary>
+<summary> 1. Funcția de afișare input (DATAPRINT.exe) </summary>
 <p>
 
 
@@ -2208,7 +2211,7 @@ while True:
  </details>
  
  <details>
-<summary> 3. Funcția de desenare input (Python) </summary>
+<summary> 2. Funcția de desenare input (DRAW.exe) </summary>
 <p>
 
 
