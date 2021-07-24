@@ -9,7 +9,7 @@ Toate schimbările majore ale bibliotecii vor fi anunțate aici
  
     - DROP-OUT pentru rețeaua neuronală.
  
-    - Metodă de vectorizare a imagininilor. Imaginile pot fi convertite în matrice prin constructorul clasei Matrix.
+    - Metodă de vectorizare a imaginilor. Imaginile pot fi convertite în matrice prin constructorul clasei Matrix.
  
     - Funcție de eliminare valori din matrice. [matrix.pop( numărul de elemente ce vor fi eliminate ) ].
  
